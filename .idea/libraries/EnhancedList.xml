@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="EnhancedList">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/EnhancedList.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Gogole/Gogole.iml" filepath="$PROJECT_DIR$/Gogole/Gogole.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MozzarellaProject.iml" filepath="$PROJECT_DIR$/MozzarellaProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MozzarellaWaterfox/MozzarellaWaterfox.iml" filepath="$PROJECT_DIR$/MozzarellaWaterfox/MozzarellaWaterfox.iml" />
+    </modules>
+  </component>
+</project>

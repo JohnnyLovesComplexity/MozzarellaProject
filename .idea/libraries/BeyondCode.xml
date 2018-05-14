@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="BeyondCode">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/BeyondCode.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
