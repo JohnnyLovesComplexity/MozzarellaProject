@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/../out/test/Gogole"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<levels>
+		<level name="Jetbrains Annotations" value="project"/>
+		<level name="JUnit5" value="project"/>
+		<level name="BeyondCode" value="project"/>
+		<level name="EnhancedList" value="project"/>
+	</levels>
+</component>
