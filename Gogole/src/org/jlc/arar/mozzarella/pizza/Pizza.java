@@ -1,9 +1,9 @@
-package org.jlc.arar.mozzarella.gogole;
+package org.jlc.arar.mozzarella.pizza;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Gogole extends Application {
+public class Pizza extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
