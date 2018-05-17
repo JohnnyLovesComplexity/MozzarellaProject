@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Gogole/Gogole.iml" filepath="$PROJECT_DIR$/Gogole/Gogole.iml" />
       <module fileurl="file://$PROJECT_DIR$/MozzarellaProject.iml" filepath="$PROJECT_DIR$/MozzarellaProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/MozzarellaWaterfox/MozzarellaWaterfox.iml" filepath="$PROJECT_DIR$/MozzarellaWaterfox/MozzarellaWaterfox.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Gogole/Pizza.iml" filepath="$PROJECT_DIR$/Gogole/Pizza.iml" />
     </modules>
   </component>
 </project>
