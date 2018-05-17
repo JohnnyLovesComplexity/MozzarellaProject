@@ -1,0 +1,31 @@
+[class*="col"]{ 
+	margin-bottom: 20px; 
+} 
+
+img{ 
+	width: 100%; 
+}
+
+.ingredient,.ustensile{
+	width: 5%;
+}	
+
+body{ 
+	margin-top: 10px; 
+}
+
+.badge{
+	
+	background-color: pink;
+}
+
+.presentation{
+	border: 10px solid #FFE4E1;
+	border-radius: 10px;
+}
+
+#bgimg{
+    height: 500px;
+    background: url(images/head.png) no-repeat center fixed;
+    background-size: cover;
+}

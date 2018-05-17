@@ -1,0 +1,103 @@
+<!DOCTYPE HTML> 
+<html> 
+	<head> 
+		<meta charset="utf-8"> 
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet"> 
+		<link href="bootstrap/css/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">		
+		<link href="pizza.css" rel="stylesheet"> 
+	</head> 
+	<body> 
+			
+		<script src="bootstrap/js/jquery-3.2.1.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		
+		<div class="container"> 
+		
+			<a class="well" href="#"> Messages non lus <span class="badge">666</span></a>
+
+			<nav class="navbar navbar-default"> 
+				<div class="container-fluid"> 
+					<ul class="nav navbar-nav"> 
+						<li class="active"> <a href="index.html">Accueil</a> </li> 
+						<li> <a href="pizza.html">La pizza dans tous ces états </a> </li> 
+					</ul> 
+				</div> 
+			</nav> 
+			
+			<div id="bgimg">
+				
+			</div>
+		
+			<div class="alert alert-dismissable alert-success">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<p>Notre partenaire <a href="https://www.dominos.fr/"> Dominos Pizza </a></p>
+				<p><button id="myButton" type="button" class="btn btn-primary"> <span class="fa fa-hand-pointer-o fa-lg"></span> Fermer </button></p>
+			</div>
+		
+			<script> <!-- appelé lorsque l'on clique sur le bouton fermer-->
+				$('#myButton').click(function(){
+					$('.alert').alert('close');
+				})
+			</script>
+		
+			<section class="row"> 
+			<div class="col-lg-12 presentation"> 
+			<h1> Pizza </h1>
+			<h2> Notre recette </h2>
+			<p>
+					Etape 1
+					Faire cuire dans une poêle les lardons et les champignons.
+					Etape 2
+					Dans un bol, verser la boîte de concentré de tomate, y ajouter un demi verre d'eau, ensuite mettre un carré de sucre (pour enlever l'acidité de la tomate) une pincée de sel, de poivre, et une pincée d'herbe de Provence.
+					Etape 3
+					Dérouler la pâte à pizza sur le lèche frite de votre four, piquer-le.
+					Etape 4
+					Avec une cuillère à soupe, étaler délicatement la sauce tomate, ensuite y ajouter les lardons et les champignons bien dorer. Parsemer de fromage râpée.
+					Etape 5
+					Mettre au four à 220°, thermostat 7-8, pendant 20 min (ou lorsque le dessus de la pizza est doré).
+					Note de l'auteur
+					A déguster chaud en entrée ou en plat accompagné d'une bonne salade verte. Bon appétit !
+					<h4> Ingredients </h4>
+					<ul>
+						<li> <img class="ingredient" src="images/ingredient1.jpg" alt="ingredient"> 1 pâte à pizza prête à cuire </li>
+						<li> <img class="ingredient" src="images/ingredient2.jpg" alt="ingredient"> 1 petite boîte de tomate </li>
+						<li> <img class="ingredient" src="images/ingredient3.jpg" alt="ingredient"> 1 barquette de lardons nature </li>
+						<li> <img class="ingredient" src="images/ingredient4.jpg" alt="ingredient"> 1 petite boîte de champignon de Paris en lamelles </li>
+						<li> <img class="ingredient"src="images/ingredient5.jpg" alt="ingredient"> 2 poignées de gruyère râpée </li>
+					</ul>
+					<h4> Ustensiles </h4>
+					<ul>
+						<li> <img class="ustensile" src="images/ustensile1.jpg" alt="ustensile"> 1 poêle </li>
+						<li> <img class="ustensile" src="images/ustensile2.jpg" alt="ustensile"> 1 bol </li>
+						<li> <img class="ustensile" src="images/ustensile3.jpg" alt="ustensile"> 1 four </li>
+						<li> <img class="ustensile" src="images/ustensile4.jpg" alt="ustensile"> 1 fourchette </li>
+						<li> <img class="ustensile" src="images/ustensile5.jpg" alt="ustensile"> 1 râpe </li>
+						<li> <img class="ustensile" src="images/ustensile6.jpg" alt="ustensile"> 1 pinceau </li>
+					<ul>	
+			</p>
+			</div> 
+			</section>
+			
+			<section class="row"> 
+			<div class="col-sm-4"> 
+				<p><strong>Nos coordonnées :</strong></p> 
+				<strong>Pizzeria MOZZA</strong><br /> 
+				5 rue des olives<br/> 
+				69003 LYON<br/>
+				<br/>
+				<p><strong>04 78 55 34 23</strong></p> 
+			</div> 
+				<div class="col-sm-4"> 
+					<p><strong>Nos horaires d'ouverture :</strong></p> 
+					LUNDI-SAMEDI : 9h - 18h 30<br/> 
+					DIMANCHE : 10h - 18h<br/> 
+				</div>
+				<div class="col-sm-4"> 
+					<p><strong>Pour nous trouver :</strong></p> 
+					Futur plan google map ;-) 
+				</div> 
+			</section> 
+		</div> 
+		
+	</body> 
+</html> 
