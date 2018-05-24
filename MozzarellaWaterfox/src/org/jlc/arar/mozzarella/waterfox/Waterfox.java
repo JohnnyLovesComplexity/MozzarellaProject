@@ -55,12 +55,42 @@ public class Waterfox extends Application {
 
 			Scanner sc = new Scanner(System.in);
 
+			System.out.println("Vous souhaitez :\n" +
+					"1 : Acceder au site pizza.com\n" +
+					"2 : Acceder au fichier recette.txt\n" +
+					"3 : Acceder à l'image pizza.png\n" +
+					"4 : Deposer votre propre fichier");
+			int i = sc.nextInt();
+			String request;
+			switch (i){
+				case 1 :
+					request = "GET http://pizza.com HTTP/1.1";
+					printWriter.println(request);
+					printWriter.flush();
+					break;
+				case 2 :
+					request = "GET http://recette.txt HTTP/1.1";
+					printWriter.println(request);
+					printWriter.flush();
+					break;
+				case 3 :
+
+					break;
+				case 4 :
+					System.out.println("Quel est le nom de votre fichier ?");
+					String name = sc.nextLine();
+					//...
+					break;
+			}
+
 			Thread envoyer = new Thread(new Runnable() {
 				String message;
 				@Override
 				public void run() {
 					while(true){
-
+						message = sc.nextLine();
+						printWriter.println(message);
+						printWriter.flush();
 					}
 				}
 			});
