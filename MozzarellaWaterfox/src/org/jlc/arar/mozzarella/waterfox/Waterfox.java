@@ -40,7 +40,7 @@ public class Waterfox extends Application {
 
 		try {
 			System.out.println("Tentative de connexion");
-			Socket con_serv = new Socket(InetAddress.getByAddress("127.0.0.1".getBytes()),80);
+			Socket con_serv = new Socket(InetAddress.getByName("127.0.0.1"),80);
 			System.out.println("Connexion etablie");
 
 			//flux de sortie
@@ -60,9 +60,7 @@ public class Waterfox extends Application {
 				@Override
 				public void run() {
 					while(true){
-						message = sc.nextLine();
-						printWriter.println(message);
-						printWriter.flush();
+
 					}
 				}
 			});
@@ -102,8 +100,6 @@ public class Waterfox extends Application {
 					System.out.print("La connexion n'a pas pu être établie.");
 				}
 			}*/
-
-			con_serv.close();
 
 		} catch (IOException e) {
 
