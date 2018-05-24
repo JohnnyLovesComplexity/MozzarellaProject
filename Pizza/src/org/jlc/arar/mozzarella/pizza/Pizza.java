@@ -117,7 +117,6 @@ public class Pizza extends Application implements Runnable {
 		
 		bt_stop.setCancelButton(true);
 		bt_stop.setOnMouseClicked(event -> {
-			//setRunning(false);
 			stopServer();
 			Platform.exit();
 		});
