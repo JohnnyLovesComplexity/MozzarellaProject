@@ -3,6 +3,8 @@ package org.jlc.arar.mozzarella.pizza;
 import fr.berger.enhancedlist.Couple;
 import fr.berger.enhancedlist.lexicon.Lexicon;
 import fr.berger.enhancedlist.lexicon.LexiconBuilder;
+import javafx.geometry.Orientation;
+import javafx.scene.control.Separator;
 import org.jlc.arar.mozzarella.Connection;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -21,9 +23,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jlc.arar.mozzarella.ConnectionData;
 
 import javax.naming.OperationNotSupportedException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -118,7 +121,6 @@ public class Pizza extends Application implements Runnable {
 		bt_stop.setCancelButton(true);
 		bt_stop.setOnMouseClicked(event -> {
 			stopServer();
-			Platform.exit();
 		});
 		
 		bt_clear.setOnMouseClicked(event -> {
@@ -126,7 +128,7 @@ public class Pizza extends Application implements Runnable {
 			loggerEngine.loadContent("");
 		});
 		
-		tb_buttons.getItems().addAll(bt_start, bt_pause_resume, bt_stop, bt_clear);
+		tb_buttons.getItems().addAll(bt_start, bt_pause_resume, bt_stop, new Separator(Orientation.VERTICAL), bt_clear);
 		root.setTop(tb_buttons);
 		root.setCenter(loggerView);
 		
@@ -141,26 +143,33 @@ public class Pizza extends Application implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Connection connection = new Connection(InetAddress.getByName(ConnectionData.serverIP), ConnectionData.serverPort);
-			
-			Couple<String, DatagramPacket> received;
+			ServerSocket soc = new ServerSocket(80);
 			
 			while (getState() == State.INITIALIZED);
 			
 			while (getState().isRunning()) {
-				while (getState() == State.PAUSED);
-				
-				received = null;
-				
-				try {
-					received = connection.receive(ConnectionData.serverPort);
-				} catch (Exception ignored) { }
-				
-				if (received != null) {
-					Thread t = createThread(new Connection(connection), received);
-					t.start();
-					connections.add(t);
+				while (getState() == State.PAUSED) {
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException ex) {
+						ex.printStackTrace();
+					}
 				}
+				
+				Socket com_cli = soc.accept();
+				String message = "";
+				
+				BufferedReader in = new BufferedReader(new InputStreamReader(com_cli.getInputStream()));
+				
+				/*String line = "";
+				while ((line = in.readLine()) != null)
+					message += line;*/
+				message = in.readLine();
+				
+				// Manage the client by creating a thread for this one (see createThread() ).
+				Thread t = createThread(com_cli, message);
+				t.start();
+				connections.add(t);
 				
 				for (int i = 0; i < connections.size(); i++) {
 					if (connections.get(i) == null || !connections.get(i).isAlive() || connections.get(i).isInterrupted()) {
@@ -169,13 +178,11 @@ public class Pizza extends Application implements Runnable {
 					}
 				}
 			}
-		} catch (UnknownHostException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		try {
-			Pizza.this.stop();
-		} catch (Exception ignored) { }
+		stopServer();
 	}
 	
 	@Override
@@ -195,43 +202,42 @@ public class Pizza extends Application implements Runnable {
 		Runtime.getRuntime().halt(0);
 	}
 	
-	protected Thread createThread(@NotNull Connection connection, @NotNull Couple<String, DatagramPacket> received) {
+	protected Thread createThread(@NotNull Socket com_cli, @NotNull String message) {
 		return new Thread(() -> {
-			String data = null;
-			if (received.getY() != null)
-				log("New connection: " + received.getY().getAddress().getHostName() + " port " + received.getY().getPort());
+			log("New connection: " + com_cli.getInetAddress().getHostName() + " port " + com_cli.getPort());
 			
-			if (received.getX() != null)
-				data = received.getX();
+			log("data received: \"" + message + "\".");
 			
-			if (data != null) {
-				log("data received: \"" + data + "\".");
+			// Sending an answer
+			String answer = "";
+			boolean stopServer = false;
+			/*try {
+				if (message.toLowerCase().equals("time")) {
+					SimpleDateFormat sdf = new SimpleDateFormat("hh-MM-ss");
+					answer = sdf.format(new Date());
+				} else if (message.toLowerCase().equals("exit")) {
+					answer = "Shutting down...";
+					stopServer = true;
+				} else if (message.toLowerCase().equals("hello world!"))
+					answer = "Hello back!";
+				else
+					answer = message;
 				
-				// Sending an answer
-				String answer = "";
-				boolean stopServer = false;
-				try {
-					if (data.toLowerCase().equals("time")) {
-						SimpleDateFormat sdf = new SimpleDateFormat("hh-MM-ss");
-						answer = sdf.format(new Date());
-					} else if (data.toLowerCase().equals("exit")) {
-						answer = "Shutting down...";
-						stopServer = true;
-					} else if (data.toLowerCase().equals("hello world!"))
-						answer = "Hello back!";
-					else
-						answer = data;
-					
-					connection.answer(answer);
-					log("Answered \"" + answer + "\"");
-				} catch (OperationNotSupportedException ex) {
-					ex.printStackTrace();
-					log(ex.getMessage());
-				}
-				finally {
-					if (stopServer)
-						stopServer();// setRunning(false);
-				}
+				connection.answer(answer);
+				log("Answered \"" + answer + "\"");
+			} catch (OperationNotSupportedException ex) {
+				ex.printStackTrace();
+				log(ex.getMessage());
+			}
+			finally {
+				if (stopServer)
+					stopServer();
+			}*/
+			
+			try {
+				com_cli.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -318,6 +324,7 @@ public class Pizza extends Application implements Runnable {
 		bt_stop.setDisable(true);
 		bt_pause_resume.setDisable(true);
 		log("Server is stopping...");
+		Platform.exit();
 	}
 	
 	/* GETTERS & SETTERS */

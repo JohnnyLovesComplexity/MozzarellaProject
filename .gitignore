@@ -6,7 +6,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-#.idea/**/workspace.xml
+.idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
 
@@ -21,7 +21,7 @@
 
 # Gradle:
 .idea/**/gradle.xml
-#.idea/**/libraries
+.idea/**/libraries
 
 # CMake
 cmake-build-debug/
@@ -99,8 +99,8 @@ tmp/
 *.bak
 *.swp
 *~.nib
-#local.properties
-#.settings/
+local.properties
+.settings/
 .loadpath
 .recommenders
 
@@ -120,7 +120,7 @@ tmp/
 .factorypath
 
 # PDT-specific (PHP Development Tools)
-#.buildpath
+.buildpath
 
 # sbteclipse plugin
 .target
@@ -144,13 +144,13 @@ tmp/
 
 ### Eclipse Patch ###
 # Eclipse Core
-#.project
-#/**/.project
+.project
+/**/.project
 
 # JDT-specific (Eclipse Java Development Tools)
-#.classpath
-#.project
-#/**/.classpath
+.classpath
+.project
+/**/.classpath
 
 # Annotation Processing
 .apt_generated
