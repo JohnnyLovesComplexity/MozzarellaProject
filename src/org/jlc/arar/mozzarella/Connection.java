@@ -17,6 +17,7 @@ public class Connection {
 	
 	@Nullable
 	private DatagramSocket datagramSocket;
+	@NotNull
 	private InetAddress address;
 	private int port;
 	
@@ -29,11 +30,21 @@ public class Connection {
 		setDatagramSocket(null);
 		setAddress(address);
 		setPort(port);
+		setLastReceivedPacket(null);
+	}
+	public Connection(@NotNull Connection connection) {
+		if (connection == null)
+			throw new NullPointerException();
+		
+		setDatagramSocket(connection.getDatagramSocket());
+		setAddress(connection.getAddress());
+		setPort(connection.getPort());
+		setLastReceivedPacket(connection.getLastReceivedPacket());
 	}
 	
 	/* CONNECTION METHODS */
 	
-	public boolean send(@NotNull String data) {
+	public synchronized boolean send(@NotNull String data) {
 		boolean result;
 		
 		try {
@@ -49,22 +60,22 @@ public class Connection {
 		
 		return result;
 	}
-	public boolean send(@NotNull InetAddress address, int port, @NotNull String data) {
+	public synchronized boolean send(@NotNull InetAddress address, int port, @NotNull String data) {
 		setAddress(address);
 		setPort(port);
 		return send(data);
 	}
-	public boolean send(@NotNull InetAddress address, @NotNull String data) {
+	public synchronized boolean send(@NotNull InetAddress address, @NotNull String data) {
 		setAddress(address);
 		return send(data);
 	}
-	public boolean send(int port, @NotNull String data) {
+	public synchronized boolean send(int port, @NotNull String data) {
 		setPort(port);
 		return send(data);
 	}
 	
 	@Nullable
-	public Couple<String, DatagramPacket> receive() {
+	public synchronized Couple<String, DatagramPacket> receive() {
 		byte[] data = new byte[MAX_DATA_BYTE_LENGTH];
 		
 		DatagramPacket dp = null;
@@ -87,21 +98,21 @@ public class Connection {
 		
 		return new Couple<>(message, dp);
 	}
-	public Couple<String, DatagramPacket> receive(@NotNull InetAddress address, int port) {
+	public synchronized Couple<String, DatagramPacket> receive(@NotNull InetAddress address, int port) {
 		setAddress(address);
 		setPort(port);
 		return receive();
 	}
-	public Couple<String, DatagramPacket> receive(@NotNull InetAddress address) {
+	public synchronized Couple<String, DatagramPacket> receive(@NotNull InetAddress address) {
 		setAddress(address);
 		return receive();
 	}
-	public Couple<String, DatagramPacket> receive(int port) {
+	public synchronized Couple<String, DatagramPacket> receive(int port) {
 		setPort(port);
 		return receive();
 	}
 	
-	public boolean answer(@NotNull String data) throws OperationNotSupportedException {
+	public synchronized boolean answer(@NotNull String data) throws OperationNotSupportedException {
 		if (getLastReceivedPacket() == null)
 			throw new OperationNotSupportedException("Cannot answer because there is no body to speak to... #alone");
 		
@@ -119,42 +130,42 @@ public class Connection {
 		
 		return result;
 	}
-	public boolean answer(@NotNull DatagramPacket lastReceivedPacket, @NotNull String data) throws OperationNotSupportedException {
+	public synchronized boolean answer(@NotNull DatagramPacket lastReceivedPacket, @NotNull String data) throws OperationNotSupportedException {
 		setLastReceivedPacket(lastReceivedPacket);
 		return answer(data);
 	}
 	
 	/* GETTERS & SETTERS */
 	
-	public DatagramSocket getDatagramSocket() {
+	public synchronized DatagramSocket getDatagramSocket() {
 		return datagramSocket;
 	}
 	
-	public void setDatagramSocket(DatagramSocket datagramSocket) {
+	public synchronized void setDatagramSocket(DatagramSocket datagramSocket) {
 		this.datagramSocket = datagramSocket;
 	}
 	
-	public InetAddress getAddress() {
+	public synchronized InetAddress getAddress() {
 		return address;
 	}
 	
-	public void setAddress(InetAddress address) {
+	public synchronized void setAddress(InetAddress address) {
 		this.address = address;
 	}
 	
-	public int getPort() {
+	public synchronized int getPort() {
 		return port;
 	}
 	
-	public void setPort(int port) {
+	public synchronized void setPort(int port) {
 		this.port = port;
 	}
 	
-	public DatagramPacket getLastReceivedPacket() {
+	public synchronized DatagramPacket getLastReceivedPacket() {
 		return lastReceivedPacket;
 	}
 	
-	public void setLastReceivedPacket(DatagramPacket lastReceivedPacket) {
+	public synchronized void setLastReceivedPacket(DatagramPacket lastReceivedPacket) {
 		this.lastReceivedPacket = lastReceivedPacket;
 	}
 }

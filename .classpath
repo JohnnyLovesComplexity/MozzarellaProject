@@ -2,10 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/MozzarellaProject/src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetbrains Annotations"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetbrains Annotations"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUnit5"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/BeyondCode"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EnhancedList"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/BeyondCode"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/EnhancedList"/>
 	<classpathentry kind="output" path="out/production/MozzarellaProject"/>
 </classpath>

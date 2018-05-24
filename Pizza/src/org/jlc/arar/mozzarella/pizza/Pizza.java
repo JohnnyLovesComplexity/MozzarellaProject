@@ -3,6 +3,7 @@ package org.jlc.arar.mozzarella.pizza;
 import fr.berger.enhancedlist.Couple;
 import fr.berger.enhancedlist.lexicon.Lexicon;
 import fr.berger.enhancedlist.lexicon.LexiconBuilder;
+import org.jlc.arar.mozzarella.Connection;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -17,6 +18,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jlc.arar.mozzarella.ConnectionData;
 
 import javax.naming.OperationNotSupportedException;
 import java.net.DatagramPacket;
@@ -25,7 +27,7 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Pizza extends Application {
+public class Pizza extends Application implements Runnable {
 	
 	public enum State {
 		INITIALIZED,
@@ -48,12 +50,14 @@ public class Pizza extends Application {
 	}
 	
 	private State state;
-	private boolean isRunning;
 	private Thread th_route;
 	
 	private Lexicon<Thread> connections;
 	
 	private BorderPane root;
+	private ToolBar tb_buttons;
+	private Button bt_start;
+	private Button bt_pause_resume;
 	private Button bt_stop;
 	private Button bt_clear;
 	private WebView loggerView;
@@ -61,16 +65,18 @@ public class Pizza extends Application {
 	private final String headContent =
 			"<html>" +
 					"<head>" +
-					"<meta charset=\"utf-8\"/>" +
-					"<style>" +
-					"p {" +
-					"font-family: Calibri, Verdana, Arial, serif;" +
-					"}" +
-					"</style>" +
+						"<meta charset=\"utf-8\"/>" +
+						"<style>" +
+						"p {" +
+						"font-family: Calibri, Verdana, Arial, serif;" +
+						"}" +
+						"</style>" +
 					"</head>" +
 					"<body>";
 	private String currentContent;
-	private final String footContent = "</body></html>";
+	private final String footContent =
+					"</body>" +
+				"</html>";
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -88,10 +94,26 @@ public class Pizza extends Application {
 				.createLexicon();
 		
 		root = new BorderPane();
+		tb_buttons = new ToolBar();
+		bt_start = new Button("Start");
+		bt_pause_resume = new Button("Pause");
 		bt_stop = new Button("Stop");
 		bt_clear = new Button("Clear");
 		loggerView = new WebView();
 		loggerEngine = loggerView.getEngine();
+		
+		bt_start.setOnMouseClicked(event -> {
+			if (getState() == State.INITIALIZED) {
+				startServer();
+			}
+		});
+		
+		bt_pause_resume.setOnMouseClicked(event -> {
+			if (getState() == State.STARTED)
+				pauseServer();
+			else if (getState() == State.PAUSED)
+				resumeServer();
+		});
 		
 		bt_stop.setCancelButton(true);
 		bt_stop.setOnMouseClicked(event -> {
@@ -101,15 +123,19 @@ public class Pizza extends Application {
 		});
 		
 		bt_clear.setOnMouseClicked(event -> {
+			currentContent = "";
 			loggerEngine.loadContent("");
 		});
 		
-		root.setTop(new ToolBar(bt_stop, bt_clear));
+		tb_buttons.getItems().addAll(bt_start, bt_pause_resume, bt_stop, bt_clear);
+		root.setTop(tb_buttons);
 		root.setCenter(loggerView);
 		
 		primaryStage.setScene(new Scene(root, 640, 480));
+		primaryStage.setTitle("[Server] Pizza \uD83C\uDF55");
 		primaryStage.show();
 		
+		initServer();
 		th_route.start();
 	}
 	
@@ -122,7 +148,6 @@ public class Pizza extends Application {
 			
 			while (getState() == State.INITIALIZED);
 			
-			log("Server ready to process!");
 			while (getState().isRunning()) {
 				while (getState() == State.PAUSED);
 				
@@ -150,7 +175,7 @@ public class Pizza extends Application {
 		}
 		
 		try {
-			ServerRX302.this.stop();
+			Pizza.this.stop();
 		} catch (Exception ignored) { }
 	}
 	
@@ -158,7 +183,6 @@ public class Pizza extends Application {
 	public void stop() throws Exception {
 		super.stop();
 		
-		setRunning(false);
 		stopServer();
 		if (th_route != null)
 			th_route.interrupt();
@@ -229,40 +253,72 @@ public class Pizza extends Application {
 		
 		addCurrentContent(
 				"<p>" +
-						message +
-						"</p>"
+				message +
+				"</p>"
 		);
 		
 		if (loggerEngine != null) {
 			Platform.runLater(() -> loggerEngine.loadContent(
 					headContent +
-							getCurrentContent() +
-							footContent
+					getCurrentContent() +
+					footContent
 			));
 		}
 	}
 	
 	/* THREAD CONTROL */
 	
-	// TODO: Gray out buttons
+	public void initServer() {
+		if (getState() != State.STOPPED) {
+			setState(State.INITIALIZED);
+			bt_start.setDisable(false);
+			bt_pause_resume.setDisable(true);
+			bt_pause_resume.setText("Pause");
+			bt_stop.setDisable(true);
+		}
+	}
 	
+	@SuppressWarnings("Duplicates")
 	public void startServer() {
-		if (getState() != State.STOPPED)
+		if (getState() != State.STOPPED) {
 			setState(State.STARTED);
+			bt_start.setDisable(true);
+			bt_pause_resume.setDisable(false);
+			bt_pause_resume.setText("Pause");
+			bt_stop.setDisable(false);
+			log("Server ready to process!");
+		}
 	}
 	
 	public void pauseServer() {
-		if (getState() != State.INITIALIZED && getState() != State.STOPPED)
+		if (getState() != State.INITIALIZED && getState() != State.STOPPED) {
 			setState(State.PAUSED);
+			bt_start.setDisable(true);
+			bt_pause_resume.setDisable(false);
+			bt_pause_resume.setText("Resume");
+			bt_stop.setDisable(false);
+			log("Server is paused");
+		}
 	}
 	
+	@SuppressWarnings("Duplicates")
 	public void resumeServer() {
-		if (getState() != State.INITIALIZED && getState() != State.STOPPED)
+		if (getState() != State.INITIALIZED && getState() != State.STOPPED) {
 			setState(State.STARTED);
+			bt_start.setDisable(true);
+			bt_pause_resume.setDisable(false);
+			bt_pause_resume.setText("Pause");
+			bt_stop.setDisable(false);
+			log("Server is ready!");
+		}
 	}
 	
 	public void stopServer() {
 		setState(State.STOPPED);
+		bt_start.setDisable(true);
+		bt_stop.setDisable(true);
+		bt_pause_resume.setDisable(true);
+		log("Server is stopping...");
 	}
 	
 	/* GETTERS & SETTERS */
@@ -276,14 +332,6 @@ public class Pizza extends Application {
 			throw new NullPointerException();
 		
 		this.state = state;
-	}
-	
-	public synchronized boolean isRunning() {
-		return isRunning;
-	}
-	
-	public synchronized void setRunning(boolean running) {
-		isRunning = running;
 	}
 	
 	public synchronized String getCurrentContent() {
