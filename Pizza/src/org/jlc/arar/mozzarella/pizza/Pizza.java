@@ -55,6 +55,7 @@ public class Pizza extends Application implements Runnable {
 	private State state;
 	private Thread th_route;
 	
+	private ServerSocket soc;
 	private Lexicon<Thread> connections;
 	
 	private BorderPane root;
@@ -143,7 +144,7 @@ public class Pizza extends Application implements Runnable {
 	@Override
 	public void run() {
 		try {
-			ServerSocket soc = new ServerSocket(80);
+			soc = new ServerSocket(80);
 			
 			while (getState() == State.INITIALIZED);
 			
@@ -161,10 +162,9 @@ public class Pizza extends Application implements Runnable {
 				
 				BufferedReader in = new BufferedReader(new InputStreamReader(com_cli.getInputStream()));
 				
-				/*String line = "";
+				String line = "";
 				while ((line = in.readLine()) != null)
-					message += line;*/
-				message = in.readLine();
+					message += line + "<br />";
 				
 				// Manage the client by creating a thread for this one (see createThread() ).
 				Thread t = createThread(com_cli, message);
@@ -195,6 +195,12 @@ public class Pizza extends Application implements Runnable {
 		
 		for (Thread connection : connections)
 			connection.interrupt();
+		
+		if (soc != null) {
+			try {
+				soc.close();
+			} catch (IOException ignored) { }
+		}
 		
 		log("Shutting down...");
 		log("Good bye.");
