@@ -38,87 +38,106 @@ public class Waterfox extends Application {
 		w_view = new WebView();
 		w_engine = w_view.getEngine();
 
-		try {
-			System.out.println("Connexion...");
+		System.out.println("Connexion...");
+		try{
 			Socket con_serv = new Socket(InetAddress.getByName("127.0.0.1"),80);
-			System.out.println("Connected");
+			try {
 
-			//flux de sortie
-			InputStream inp = con_serv.getInputStream();
+				System.out.println("Connected");
 
-			//flux d'entrée
-			OutputStream op = con_serv.getOutputStream();
+				//flux de sortie
+				InputStream inp = con_serv.getInputStream();
+
+				//flux d'entrée
+				OutputStream op = con_serv.getOutputStream();
 
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(inp));
-			PrintWriter printWriter = new PrintWriter(op);
+				BufferedReader in = new BufferedReader(new InputStreamReader(inp));
+				PrintWriter printWriter = new PrintWriter(op);
 
-			Scanner sc = new Scanner(System.in);
+				Scanner sc = new Scanner(System.in);
 
-			printWelcome();
-			System.out.println("Vous souhaitez :\n" +
-					"1 : Acceder au fichier recette.txt\n" +
-					"2 : Acceder à l'image pizza.png\n" +
-					"3 : Deposer votre propre fichier");
-			int i = sc.nextInt();
-			String request = "";
-			switch (i){
-				case 1 :
-					getRequest(printWriter, "localhost/recette.txt");
-					break;
-				case 2 :
-					getRequest(printWriter, "localhost/pizza.png");
-					break;
-				case 3 :
-					putRequest(printWriter);
-					break;
-			}
-
-			Thread recevoir = new Thread(new Runnable() {
+				printWelcome();
+				System.out.println("Vous souhaitez :\n" +
+						"1 : Acceder au fichier recette.txt\n" +
+						"2 : Acceder à l'image pizza.png\n" +
+						"3 : Deposer votre propre fichier");
+				int i = sc.nextInt();
+				String request = "";
+				switch (i){
+					case 1 :
+						getRequest(printWriter, "localhost/recette.txt ");
+						break;
+					case 2 :
+						getRequest(printWriter, "localhost/pizza.png ");
+						break;
+					case 3 :
+						putRequest(printWriter);
+						break;
+				}
+			/*Thread envoyer = new Thread(new Runnable() {
 				String message;
 				@Override
 				public void run() {
-					try {
-						message = in.readLine();
-						while(message!=null){
-							System.out.println("Serveur : " + message);
-							message = in.readLine();
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					System.out.println("Response Recieved!!");
-					if(i == 1)
-					{
-						assert message != null;
-						String[] lines = message.split("\r\n");
-						boolean suivante = false;
-						StringBuilder content = new StringBuilder();
-						for (String line:lines) {
-							if(line.toLowerCase().contains("content-type : text/html;"))
-								suivante = true;
-							else if(suivante){
-								content.append(line);
-							}
-						}
-						FileGenerator.generateFile(content.toString(),"/recette.txt");
-					}
-					System.out.println("Serveur déconecté");
-					printWriter.close();
-					try {
-						con_serv.close();
-					} catch (IOException e) {
-						e.printStackTrace();
+					while(true){
+						message = sc.nextLine();
+						printWriter.println(message);
+						printWriter.flush();
 					}
 				}
 			});
+			envoyer.start();*/
 
-			recevoir.start();
+
+				Thread recevoir = new Thread(new Runnable() {
+					String message ="";
+					@Override
+					public void run() {
+						try {
+							String line;
+							while((line = in.readLine()) !=null){
+								message += "\r\n" + line;
+							}
+
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						System.out.println("Response Recieved!!\n" + message);
+						if(i == 1)
+						{
+							assert message != null;
+							String[] lines = message.split("\r\n");
+							boolean suivante = false;
+							StringBuilder content = new StringBuilder();
+							for (String line:lines) {
+								if(line.toLowerCase().contains("text/html"))
+									suivante = true;
+								else if(suivante){
+									content.append(line);
+								}
+							}
+							FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/recette.txt");
+						}
+						System.out.println("Serveur déconecté");
+						printWriter.close();
+						try {
+							con_serv.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+
+				recevoir.start();
 
 
-		} catch (IOException e) {
+			} catch (IOException e) {
 
-			e.printStackTrace();
+				e.printStackTrace();
+			}
+
+		}catch(java.net.ConnectException ce){
+			System.out.println("La connexion a échouée.\n");
 		}
 
 	}
@@ -131,8 +150,6 @@ public class Waterfox extends Application {
 		System.out.println("Serveur WEB : Par Valentin Berger, Léa Chemoul, Philippine Cluniat, Amal Ben Ismail");
 		System.out.println("Derniere version : 27/05/2018");
 		System.out.println("--------");
-		System.out.println("Quitter : tapez \"quit\"");
-		System.out.println("--------");
 	}
 
 	private static void putRequest(PrintWriter request){
@@ -143,7 +160,7 @@ public class Waterfox extends Application {
 		try{
 			String contentOfFile = FileGenerator.readContent("/"+name);
 			String path = "localhost/recette.txt";
-			request.print("PUT /" + path + "/ HTTP/1.1\r\n"); // "+path+"
+			request.print("PUT " + path + " HTTP/1.1\r\n"); // "+path+"
 			request.print("Accept-Language: en-us\r\n");
 			request.print("Connection: Keep-Alive\r\n");
 			request.print("Content-type: text/html\r\n");
@@ -168,7 +185,7 @@ public class Waterfox extends Application {
 
 	private static void getRequest(PrintWriter request, String path){
 
-		request.print("GET /" + path + "/ HTTP/1.1\r\n"); // "+path+"
+		request.print("GET " + path + " HTTP/1.1\r\n");
 		request.print("Accept-Language: en-us\r\n");
 		request.print("Connection: Keep-Alive\r\n");
 		request.print("\r\n\r\n");

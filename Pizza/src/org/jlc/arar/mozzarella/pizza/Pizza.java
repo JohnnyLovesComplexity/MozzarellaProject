@@ -151,22 +151,16 @@ public class Pizza extends Application implements Runnable {
 				Socket com_cli = soc.accept();
 				System.out.println("Connected");
 				StringBuilder message = new StringBuilder();
-				
 				BufferedReader in = new BufferedReader(new InputStreamReader(com_cli.getInputStream()));
 
 				String line = "";
-				while ((line = in.readLine()) != null)
-					message.append(line).append("<br />");
+				line = in.readLine();
+				message.append(line);
 
 				// Manage the client by creating a thread for this one (see createThread() ).
 				Thread t = createThread(com_cli, message.toString());
 				t.start();
 				connections.add(t);
-
-				BufferedWriter response = new BufferedWriter(new OutputStreamWriter(com_cli.getOutputStream()));
-				response.write(constructResponse(message.toString()));
-				response.flush();
-
 
 				for (int i = 0; i < connections.size(); i++) {
 					if (connections.get(i) == null || !connections.get(i).isAlive() || connections.get(i).isInterrupted()) {
@@ -182,34 +176,40 @@ public class Pizza extends Application implements Runnable {
 		stopServer();
 	}
 
-	private static boolean checkURL(String message) {
-
-		String url;
-
-		url = message.split("\n")[1].substring(6)
-				+ message.split("\n")[0].split(" ")[1];
-		// System.out.println(url);
-
-		return url.equals("localhost/") || url.equals("localhost/recette.txt")
-				|| url.equals("localhost/pizza.png");
-	}
-
 	private static  String constructResponse(String message){
 		String response = "";
-		if(!checkURL(message)){
+		String url;
+
+		url = message.split("\r\n")[0].replace("GET ","")
+				.replace("HTTP/1.1","")
+				.replace(" ","");
+		System.out.println(url);
+
+		if(!(url.equals("localhost/recette.txt")
+				|| url.equals("localhost/pizza.png"))){
+			System.out.println("Le chemin spécifié dans votre requête n'existe pas;\n");
 			response = constructResponseHeader(404);
 		}
-		else if(message.contains("GET http://recette.txt HTTP/1.1")){
-			try {
-				String content = FileGenerator.readContent("/site/recette.txt");
-				response = constructResponseHeader(200);
-				response += content + "\r\n";
-			} catch (IOException e) {
-				e.printStackTrace();
-				response = constructResponseHeader(404);
+		else if(message.contains("GET")){
+			if(url.equals("localhost/recette.txt")){
+				try {
+					String content = FileGenerator.readContent("Pizza/site/recette.txt");
+					response = constructResponseHeader(200);
+					response += content + "\r\n";
+				} catch (IOException e) {
+					System.out.println("Chemin spécifié introuvable\n");
+					response = constructResponseHeader(404);
+				}
+			}else if(url.equals("localhost/pizza.png"))
+			{
+				System.out.println("Envoie de pizza.png");
+				//envoie de la reponse relative a l'image
 			}
 		}else if(message.contains("PUT")){
+			System.out.println("Votre fichier a bien été ajouté au serveur");
 
+		}else{
+			response = "OK";
 		}
 
 		return response;
@@ -282,6 +282,16 @@ public class Pizza extends Application implements Runnable {
 			// Sending an answer
 			String answer = "";
 			boolean stopServer = false;
+			try{
+				BufferedWriter response = new BufferedWriter(new OutputStreamWriter(com_cli.getOutputStream()));
+				answer = constructResponse(message.toString());
+				response.write(answer);
+				log("Answered \"" + answer +"\"");
+				response.flush();
+			}catch(IOException ex){
+				ex.printStackTrace();
+			}
+
 			/*try {
 				if (message.toLowerCase().equals("time")) {
 					SimpleDateFormat sdf = new SimpleDateFormat("hh-MM-ss");
