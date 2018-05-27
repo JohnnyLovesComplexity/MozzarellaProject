@@ -1,31 +1,22 @@
 package org.jlc.arar.mozzarella.pizza;
 
-import fr.berger.enhancedlist.Couple;
 import fr.berger.enhancedlist.lexicon.Lexicon;
 import fr.berger.enhancedlist.lexicon.LexiconBuilder;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Separator;
-import org.jlc.arar.mozzarella.Connection;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jlc.arar.mozzarella.ConnectionData;
 
-import javax.naming.OperationNotSupportedException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -158,19 +149,25 @@ public class Pizza extends Application implements Runnable {
 				}
 				
 				Socket com_cli = soc.accept();
-				String message = "";
+				System.out.println("Connected");
+				StringBuilder message = new StringBuilder();
 				
 				BufferedReader in = new BufferedReader(new InputStreamReader(com_cli.getInputStream()));
-				
+
 				String line = "";
 				while ((line = in.readLine()) != null)
-					message += line + "<br />";
-				
+					message.append(line).append("<br />");
+
 				// Manage the client by creating a thread for this one (see createThread() ).
-				Thread t = createThread(com_cli, message);
+				Thread t = createThread(com_cli, message.toString());
 				t.start();
 				connections.add(t);
-				
+
+				BufferedWriter response = new BufferedWriter(new OutputStreamWriter(com_cli.getOutputStream()));
+				response.write(constructResponse(message.toString()));
+				response.flush();
+
+
 				for (int i = 0; i < connections.size(); i++) {
 					if (connections.get(i) == null || !connections.get(i).isAlive() || connections.get(i).isInterrupted()) {
 						connections.remove(i);
@@ -183,6 +180,74 @@ public class Pizza extends Application implements Runnable {
 		}
 		
 		stopServer();
+	}
+
+	private static boolean checkURL(String message) {
+
+		String url;
+
+		url = message.split("\n")[1].substring(6)
+				+ message.split("\n")[0].split(" ")[1];
+		// System.out.println(url);
+
+		return url.equals("localhost/") || url.equals("localhost/recette.txt")
+				|| url.equals("localhost/pizza.png");
+	}
+
+	private static  String constructResponse(String message){
+		String response = "";
+		if(!checkURL(message)){
+			response = constructResponseHeader(404);
+		}
+		else if(message.contains("GET http://recette.txt HTTP/1.1")){
+			try {
+				String content = FileGenerator.readContent("/site/recette.txt");
+				response = constructResponseHeader(200);
+				response += content + "\r\n";
+			} catch (IOException e) {
+				e.printStackTrace();
+				response = constructResponseHeader(404);
+			}
+		}else if(message.contains("PUT")){
+
+		}
+
+		return response;
+	}
+
+
+	// Construct Response Header
+	private static String constructResponseHeader(int responseCode) {
+		StringBuilder stringBuilder = new StringBuilder();
+
+		if (responseCode == 200) {
+
+			stringBuilder.append("HTTP/1.1 200 OK\r\n");
+			stringBuilder.append("Date:" + getTimeStamp() + "\r\n");
+			stringBuilder.append("Server:localhost\r\n");
+			stringBuilder.append("Content-Type: text/html\r\n");
+			stringBuilder.append("\r\n");
+
+		} else if (responseCode == 404) {
+
+			stringBuilder.append("HTTP/1.1 404 Not Found\r\n");
+			stringBuilder.append("Date:" + getTimeStamp() + "\r\n");
+			stringBuilder.append("Server:localhost\r\n");
+			stringBuilder.append("\r\n");
+		} else if (responseCode == 304) {
+			stringBuilder.append("HTTP/1.1 304 Not Modified\r\n");
+			stringBuilder.append("Date:" + getTimeStamp() + "\r\n");
+			stringBuilder.append("Server:localhost\r\n");
+			stringBuilder.append("\r\n");
+		}
+		return stringBuilder.toString();
+	}
+
+	private static String getTimeStamp() {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
+		String formattedDate = sdf.format(date);
+		return formattedDate;
 	}
 	
 	@Override
@@ -239,7 +304,7 @@ public class Pizza extends Application implements Runnable {
 				if (stopServer)
 					stopServer();
 			}*/
-			
+
 			try {
 				com_cli.close();
 			} catch (IOException e) {

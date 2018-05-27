@@ -39,9 +39,9 @@ public class Waterfox extends Application {
 		w_engine = w_view.getEngine();
 
 		try {
-			System.out.println("Tentative de connexion");
+			System.out.println("Connexion...");
 			Socket con_serv = new Socket(InetAddress.getByName("127.0.0.1"),80);
-			System.out.println("Connexion etablie");
+			System.out.println("Connected");
 
 			//flux de sortie
 			InputStream inp = con_serv.getInputStream();
@@ -55,46 +55,24 @@ public class Waterfox extends Application {
 
 			Scanner sc = new Scanner(System.in);
 
+			printWelcome();
 			System.out.println("Vous souhaitez :\n" +
-					"1 : Acceder au site pizza.com\n" +
-					"2 : Acceder au fichier recette.txt\n" +
-					"3 : Acceder à l'image pizza.png\n" +
-					"4 : Deposer votre propre fichier");
+					"1 : Acceder au fichier recette.txt\n" +
+					"2 : Acceder à l'image pizza.png\n" +
+					"3 : Deposer votre propre fichier");
 			int i = sc.nextInt();
-			String request;
+			String request = "";
 			switch (i){
 				case 1 :
-					request = "GET http://pizza.com HTTP/1.1";
-					printWriter.println(request);
-					printWriter.flush();
+					getRequest(printWriter, "localhost/recette.txt");
 					break;
 				case 2 :
-					request = "GET http://recette.txt HTTP/1.1";
-					printWriter.println(request);
-					printWriter.flush();
+					getRequest(printWriter, "localhost/pizza.png");
 					break;
 				case 3 :
-
-					break;
-				case 4 :
-					System.out.println("Quel est le nom de votre fichier ?");
-					String name = sc.nextLine();
-					//...
+					putRequest(printWriter);
 					break;
 			}
-
-			Thread envoyer = new Thread(new Runnable() {
-				String message;
-				@Override
-				public void run() {
-					while(true){
-						message = sc.nextLine();
-						printWriter.println(message);
-						printWriter.flush();
-					}
-				}
-			});
-			envoyer.start();
 
 			Thread recevoir = new Thread(new Runnable() {
 				String message;
@@ -109,6 +87,22 @@ public class Waterfox extends Application {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+					System.out.println("Response Recieved!!");
+					if(i == 1)
+					{
+						assert message != null;
+						String[] lines = message.split("\r\n");
+						boolean suivante = false;
+						StringBuilder content = new StringBuilder();
+						for (String line:lines) {
+							if(line.toLowerCase().contains("content-type : text/html;"))
+								suivante = true;
+							else if(suivante){
+								content.append(line);
+							}
+						}
+						FileGenerator.generateFile(content.toString(),"/recette.txt");
+					}
 					System.out.println("Serveur déconecté");
 					printWriter.close();
 					try {
@@ -121,20 +115,66 @@ public class Waterfox extends Application {
 
 			recevoir.start();
 
-			/*String response = in.readLine();
-			if (response.contains("ok")) {
-				System.out.println("Connexion établie");
-				System.out.println(response);
-			} else {
-				while (true) {
-					System.out.print("La connexion n'a pas pu être établie.");
-				}
-			}*/
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
+
+	}
+
+	private void printWelcome()
+	{
+		System.out.println("--------");
+		System.out.println("Bienvenue !");
+		System.out.println("--------");
+		System.out.println("Serveur WEB : Par Valentin Berger, Léa Chemoul, Philippine Cluniat, Amal Ben Ismail");
+		System.out.println("Derniere version : 27/05/2018");
+		System.out.println("--------");
+		System.out.println("Quitter : tapez \"quit\"");
+		System.out.println("--------");
+	}
+
+	private static void putRequest(PrintWriter request){
+
+		System.out.println("Name of the file to send :");
+		Scanner sc2 = new Scanner(System.in);
+		String name = sc2.nextLine();
+		try{
+			String contentOfFile = FileGenerator.readContent("/"+name);
+			String path = "localhost/recette.txt";
+			request.print("PUT /" + path + "/ HTTP/1.1\r\n"); // "+path+"
+			request.print("Accept-Language: en-us\r\n");
+			request.print("Connection: Keep-Alive\r\n");
+			request.print("Content-type: text/html\r\n");
+			request.print("Content-Length: 0\r\n");
+			request.print("\r\n");
+
+			System.out.println("PUT Request Header Sent!");
+
+			// Send the Data to be PUT
+			request.println(contentOfFile);
+			request.flush();
+
+			System.out.println("PUT Data Sent!");
+
+		}catch (IOException ex){
+			System.out.println(name + "doesn't exist.");
+		}
+
+
+	}
+
+
+	private static void getRequest(PrintWriter request, String path){
+
+		request.print("GET /" + path + "/ HTTP/1.1\r\n"); // "+path+"
+		request.print("Accept-Language: en-us\r\n");
+		request.print("Connection: Keep-Alive\r\n");
+		request.print("\r\n\r\n");
+
+		request.flush();
+		System.out.println("GET Request Header Sent!");
 
 	}
 }
