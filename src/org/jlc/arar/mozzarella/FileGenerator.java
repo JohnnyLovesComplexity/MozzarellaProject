@@ -1,4 +1,4 @@
-package org.jlc.arar.mozzarella.waterfox;
+package org.jlc.arar.mozzarella;
 
 import java.io.*;
 
@@ -42,6 +42,8 @@ public class FileGenerator {
 		return !problem;
 	}
 
+
+	
 	public static String readContent(String pathfile) throws IOException {
 		StringBuilder content = new StringBuilder();
 		
@@ -63,7 +65,7 @@ public class FileGenerator {
 				if (br != null)
 					br.close();
 			} catch (IOException ex) {
-				throw ex;
+				ex.printStackTrace();
 			}
 			
 			try {

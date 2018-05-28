@@ -15,11 +15,11 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jlc.arar.mozzarella.FileGenerator;
 
 import java.io.*;
 import java.lang.reflect.MalformedParametersException;
 import java.net.*;
-import java.nio.charset.MalformedInputException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -200,7 +200,7 @@ public class Pizza extends Application implements Runnable {
 		String url;
 		
 		StringBuilder beginning = new StringBuilder();
-		int i =0;
+		int i = 0;
 		while (!beginning.toString().endsWith("HTTP/1.1")) {
 			beginning.append(message.charAt(i));
 			i++;

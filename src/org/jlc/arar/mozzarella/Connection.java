@@ -3,6 +3,7 @@ package org.jlc.arar.mozzarella;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import fr.berger.enhancedlist.Couple;
+import org.jetbrains.annotations.Contract;
 
 import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class Connection {
 		setPort(port);
 		setLastReceivedPacket(null);
 	}
+	@Contract("null -> fail")
 	public Connection(@NotNull Connection connection) {
 		if (connection == null)
 			throw new NullPointerException();

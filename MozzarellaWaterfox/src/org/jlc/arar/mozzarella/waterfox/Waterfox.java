@@ -8,6 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import org.jlc.arar.mozzarella.FileGenerator;
 
 import java.io.*;
 import java.net.*;
