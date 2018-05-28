@@ -78,4 +78,17 @@ public class FileGenerator {
 		
 		return content.toString();
 	}
+
+	public static byte[] readContentImage(String pathfile) throws IOException {
+		//1- Cree un objet file pointant sur ton image
+		File imageFile = new File(pathfile);
+		//2- Cree un stream afin de pouvoir lire dans les donnees binaires
+		FileInputStream imageFileStr = new FileInputStream(imageFile);
+		//3- Recupere la taille du buffer
+		int longueurDuFichier = imageFileStr.available();
+		//4- Recupere le bytes[] complet
+		byte[] buffer = new byte[longueurDuFichier];
+		imageFileStr.read(buffer);
+		return  buffer;
+	}
 }
