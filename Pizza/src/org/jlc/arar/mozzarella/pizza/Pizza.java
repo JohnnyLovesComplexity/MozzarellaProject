@@ -135,8 +135,13 @@ public class Pizza extends Application implements Runnable {
 	@Override
 	public void run() {
 		try {
-			// Permission denied because https://stackoverflow.com/questions/25544849/java-net-bindexception-permission-denied-when-creating-a-serversocket-on-mac-os?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
-			soc = new ServerSocket(80);
+			try {
+				soc = new ServerSocket(80);
+				log("Server open on port 80");
+			} catch (SocketException ex) {
+				soc = new ServerSocket(8080);
+				log("Server open on port 8080");
+			}
 			
 			while (getState() == State.INITIALIZED);
 			
@@ -156,7 +161,7 @@ public class Pizza extends Application implements Runnable {
 
 				String line = "";
 				line = in.readLine();
-				message.append(line);
+				message.append(line); // Tester "\r\n" comme valeur sentinnelle
 
 				// Manage the client by creating a thread for this one (see createThread() ).
 				Thread t = createThread(com_cli, message.toString());
