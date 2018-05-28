@@ -59,17 +59,17 @@ public class Waterfox extends Application {
 
 				printWelcome();
 				System.out.println("Vous souhaitez :\n" +
-						"1 : Acceder au fichier recette.txt\n" +
+						"1 : Acceder au fichier avis-recette.txt\n" +
 						"2 : Acceder à l'image pizza.png\n" +
 						"3 : Deposer votre propre fichier");
 				int i = sc.nextInt();
 				String request = "";
 				switch (i){
 					case 1 :
-						getRequest(printWriter, "localhost/recette.txt ");
+						getRequest(printWriter, "/avis-recette.txt ");
 						break;
 					case 2 :
-						getRequest(printWriter, "localhost/pizza.png ");
+						getRequest(printWriter, "/3-fromages.png ");
 						break;
 					case 3 :
 						putRequest(printWriter);
@@ -116,7 +116,7 @@ public class Waterfox extends Application {
 									content.append(line);
 								}
 							}
-							FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/recette.txt");
+							FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/avis-recette.txt");
 						}
 						System.out.println("Serveur déconecté");
 						printWriter.close();
@@ -159,7 +159,7 @@ public class Waterfox extends Application {
 		String name = sc2.nextLine();
 		try{
 			String contentOfFile = FileGenerator.readContent("/"+name);
-			String path = "localhost/recette.txt";
+			String path = "/new.txt";
 			request.print("PUT " + path + " HTTP/1.1\r\n"); // "+path+"
 			request.print("Accept-Language: en-us\r\n");
 			request.print("Connection: Keep-Alive\r\n");

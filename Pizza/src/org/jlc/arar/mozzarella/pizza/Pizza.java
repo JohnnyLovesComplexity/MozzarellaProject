@@ -160,8 +160,8 @@ public class Pizza extends Application implements Runnable {
 				BufferedReader in = new BufferedReader(new InputStreamReader(com_cli.getInputStream()));
 
 				String line = "";
-				line = in.readLine();
-				message.append(line); // Tester "\r\n" comme valeur sentinnelle
+				while(!(line = in.readLine()).equals(""))
+					message.append(line); // Tester "\r\n" comme valeur sentinnelle
 
 				// Manage the client by creating a thread for this one (see createThread() ).
 				Thread t = createThread(com_cli, message.toString());
@@ -186,29 +186,36 @@ public class Pizza extends Application implements Runnable {
 		String response = "";
 		String url;
 
-		url = message.split("\r\n")[0].replace("GET ","")
+		StringBuilder beginning = new StringBuilder();
+		int i =0;
+		while(!beginning.toString().endsWith("HTTP/1.1")){
+			beginning.append(message.charAt(i));
+			i++;
+		}
+
+		url = beginning.toString().split("\r\n")[0].replace("GET ","")
 				.replace("HTTP/1.1","")
 				.replace(" ","");
 		System.out.println(url);
 
-		if(!(url.equals("localhost/recette.txt")
-				|| url.equals("localhost/pizza.png"))){
+		if(!(url.equals("/avis-recette.txt")
+				|| url.equals("/3-fromages.jpg"))){
 			System.out.println("Le chemin spécifié dans votre requête n'existe pas;\n");
 			response = constructResponseHeader(404);
 		}
 		else if(message.contains("GET")){
-			if(url.equals("localhost/recette.txt")){
+			if(url.equals("/avis-recette.txt")){
 				try {
-					String content = FileGenerator.readContent("Pizza/site/recette.txt");
+					String content = FileGenerator.readContent("Pizza/site/avis-recette.txt");
 					response = constructResponseHeader(200);
 					response += content + "\r\n";
 				} catch (IOException e) {
 					System.out.println("Chemin spécifié introuvable\n");
 					response = constructResponseHeader(404);
 				}
-			}else if(url.equals("localhost/pizza.png"))
+			}else if(url.equals("/3-fromages.jpg"))
 			{
-				System.out.println("Envoie de pizza.png");
+				System.out.println("Envoie de 3-fromages.jpg");
 				//envoie de la reponse relative a l'image
 			}
 		}else if(message.contains("PUT")){
@@ -230,7 +237,7 @@ public class Pizza extends Application implements Runnable {
 
 			stringBuilder.append("HTTP/1.1 200 OK\r\n");
 			stringBuilder.append("Date:" + getTimeStamp() + "\r\n");
-			stringBuilder.append("Server:localhost\r\n");
+			stringBuilder.append("Server:wwww.pizza.com\r\n");
 			stringBuilder.append("Content-Type: text/html\r\n");
 			stringBuilder.append("\r\n");
 
@@ -238,12 +245,12 @@ public class Pizza extends Application implements Runnable {
 
 			stringBuilder.append("HTTP/1.1 404 Not Found\r\n");
 			stringBuilder.append("Date:" + getTimeStamp() + "\r\n");
-			stringBuilder.append("Server:localhost\r\n");
+			stringBuilder.append("Server:wwww.pizza.com\r\n");
 			stringBuilder.append("\r\n");
 		} else if (responseCode == 304) {
 			stringBuilder.append("HTTP/1.1 304 Not Modified\r\n");
 			stringBuilder.append("Date:" + getTimeStamp() + "\r\n");
-			stringBuilder.append("Server:localhost\r\n");
+			stringBuilder.append("Server:wwww.pizza.com\r\n");
 			stringBuilder.append("\r\n");
 		}
 		return stringBuilder.toString();
