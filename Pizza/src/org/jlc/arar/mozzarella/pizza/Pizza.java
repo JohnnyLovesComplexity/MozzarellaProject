@@ -135,6 +135,7 @@ public class Pizza extends Application implements Runnable {
 	@Override
 	public void run() {
 		try {
+			// Permission denied because https://stackoverflow.com/questions/25544849/java-net-bindexception-permission-denied-when-creating-a-serversocket-on-mac-os?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 			soc = new ServerSocket(80);
 			
 			while (getState() == State.INITIALIZED);
