@@ -1,10 +1,14 @@
 package org.jlc.arar.mozzarella.waterfox;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -25,8 +29,10 @@ public class Waterfox extends Application {
 	
 	private WebView w_view;
 	private WebEngine w_engine;
-	
-	public static void main(String[] args) {
+
+
+
+    public static void main(String[] args) {
 		launch(args);
 	}
 	
@@ -38,6 +44,29 @@ public class Waterfox extends Application {
 		bt_refresh = new Button("Refresh");
 		w_view = new WebView();
 		w_engine = w_view.getEngine();
+		TextField field = new TextField();
+        Button buttonS = new Button("Submit");
+
+        // Create a WebView
+        WebView browser = new WebView();
+        // Get WebEngine via WebView
+        WebEngine webEngine = browser.getEngine();
+
+        VBox root = new VBox();
+        HBox hb = new HBox();
+        hb.getChildren().addAll(field, buttonS);
+        root.setPadding(new Insets(5));
+        root.setSpacing(5);
+        root.getChildren().addAll(hb, browser);
+
+        Scene scene = new Scene(root);
+
+        primaryStage.setTitle("Mozzarella Waterfox");
+        primaryStage.setScene(scene);
+        primaryStage.setWidth(450);
+        primaryStage.setHeight(300);
+
+        primaryStage.show();
 
 		System.out.println("Connexion...");
 		try{

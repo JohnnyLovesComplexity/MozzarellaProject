@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="973f36e7-6189-4765-b057-666d595e2a8c" name="Default" comment="" />
+    <list default="true" id="973f36e7-6189-4765-b057-666d595e2a8c" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java" beforeDir="false" afterPath="$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,17 +21,17 @@
       <file leaf-file-name="Connection.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/jlc/arar/mozzarella/Connection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
+            <state relative-caret-position="204">
+              <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Waterfox.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Waterfox.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
+            <state relative-caret-position="289">
+              <caret line="59" column="31" selection-start-line="59" selection-start-column="31" selection-end-line="59" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -36,20 +39,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Pizza.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Pizza.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/Pizza.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="304" column="31" selection-start-line="304" selection-start-column="31" selection-end-line="304" selection-end-column="31" />
+            <state relative-caret-position="5">
+              <caret line="98" column="32" selection-start-line="98" selection-start-column="25" selection-end-line="98" selection-end-column="32" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1498#1499#0" expanded="true" />
-                <element signature="e#1529#1530#0" expanded="true" />
-                <element signature="e#2274#2275#0" expanded="true" />
-                <element signature="e#2293#2294#0" expanded="true" />
-                <element signature="e#6253#6292#0" expanded="true" />
-                <element signature="e#7280#7311#0" expanded="true" />
-                <element signature="e#7888#7919#0" expanded="true" />
+                <element signature="e#8520#8559#0" expanded="true" />
+                <element signature="e#9547#9578#0" expanded="true" />
+                <element signature="e#10155#10186#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -67,6 +65,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>Gogole</find>
+      <find>webView</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -97,10 +96,10 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="width" value="979" />
-    <option name="height" value="1040" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="952" />
+    <option name="width" value="977" />
+    <option name="height" value="1050" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -123,6 +122,11 @@
             <path>
               <item name="MozzarellaProject" type="b2602c69:ProjectViewProjectNode" />
               <item name="MozzarellaProject" type="462c0819:PsiDirectoryNode" />
+              <item name=".idea" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MozzarellaProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MozzarellaProject" type="462c0819:PsiDirectoryNode" />
               <item name="MozzarellaWaterfox" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -137,6 +141,24 @@
               <item name="MozzarellaWaterfox" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="waterfox" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MozzarellaProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MozzarellaProject" type="462c0819:PsiDirectoryNode" />
+              <item name="Pizza" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MozzarellaProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MozzarellaProject" type="462c0819:PsiDirectoryNode" />
+              <item name="Pizza" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MozzarellaProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MozzarellaProject" type="462c0819:PsiDirectoryNode" />
+              <item name="Pizza" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pizza" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="MozzarellaProject" type="b2602c69:ProjectViewProjectNode" />
@@ -187,10 +209,10 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="UPDATED" />
-          <PATH vcs="Git" revision="" />
-          <PATH vcs="Git" revision="" />
-          <PATH vcs="Git" revision="" />
-          <PATH vcs="Git" revision="" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/MozzarellaWaterfox/MozzarellaWaterfox.iml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/Pizza.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/org/jlc/arar/mozzarella/Connection.java</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Created" />
@@ -198,6 +220,7 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="CREATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/org/jlc/arar/mozzarella/FileGenerator.java</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Deleted" />
@@ -205,7 +228,8 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="true" />
           <option name="myId" value="REMOVED_FROM_REPOSITORY" />
-          <PATH vcs="Git" revision="" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/FileGenerator.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/FileGenerator.java</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Restored" />
@@ -299,12 +323,23 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Waterfox">
     <configuration name="Pizza" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
       <option name="MAIN_CLASS_NAME" value="org.jlc.arar.mozzarella.pizza.Pizza" />
       <module name="Pizza" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+    </configuration>
+    <configuration name="Waterfox" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.jlc.arar.mozzarella.waterfox.Waterfox" />
+      <module name="MozzarellaWaterfox" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.jlc.arar.mozzarella.waterfox.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -347,8 +382,13 @@
       <properties />
       <listeners />
     </configuration>
+    <list>
+      <item itemvalue="Application.Pizza" />
+      <item itemvalue="Application.Waterfox" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Waterfox" />
         <item itemvalue="Application.Pizza" />
       </list>
     </recent_temporary>
@@ -368,6 +408,7 @@
       <workItem from="1526983229728" duration="368000" />
       <workItem from="1526986093616" duration="885000" />
       <workItem from="1527144120103" duration="2048000" />
+      <workItem from="1527495429597" duration="5333000" />
     </task>
     <task id="LOCAL-00001" summary="fichier txt et image dans pizza">
       <created>1527148638236</created>
@@ -376,17 +417,26 @@
       <option name="project" value="LOCAL" />
       <updated>1527148638236</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="txt + jpg in pizza">
+      <created>1527495558180</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1527495558180</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10650000" />
+    <option name="totallyTimeSpent" value="15983000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="848" extended-state="6" />
+    <frame x="762" y="0" width="781" height="840" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32905984" />
       <window_info anchor="right" id="Palette&#9;" order="5" />
       <window_info id="Image Layers" order="1" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
@@ -394,11 +444,11 @@
       <window_info anchor="right" id="Maven Projects" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32621083" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2684659" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.32905984" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="3" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4985755" visible="true" weight="0.22281879" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4985755" visible="true" weight="0.13869625" />
       <window_info anchor="right" id="Database" order="4" />
       <window_info id="Structure" order="6" sideWeight="0.5014245" side_tool="true" weight="0.21140939" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -408,7 +458,6 @@
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3988604" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.32905984" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -423,9 +472,39 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fichier txt et image dans pizza" />
-    <option name="LAST_COMMIT_MESSAGE" value="fichier txt et image dans pizza" />
+    <MESSAGE value="txt + jpg in pizza" />
+    <option name="LAST_COMMIT_MESSAGE" value="txt + jpg in pizza" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/org/jlc/arar/mozzarella/Connection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/Pizza.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4624">
+          <caret line="304" column="31" selection-start-line="304" selection-start-column="31" selection-end-line="304" selection-end-column="31" />
+          <folding>
+            <element signature="e#8520#8559#0" expanded="true" />
+            <element signature="e#9547#9578#0" expanded="true" />
+            <element signature="e#10155#10186#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/jlc/arar/mozzarella/Connection.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -448,14 +527,9 @@
         <state relative-caret-position="4964">
           <caret line="292" column="31" lean-forward="true" selection-start-line="292" selection-start-column="31" selection-end-line="292" selection-end-column="31" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1498#1499#0" expanded="true" />
-            <element signature="e#1529#1530#0" expanded="true" />
-            <element signature="e#2274#2275#0" expanded="true" />
-            <element signature="e#2293#2294#0" expanded="true" />
-            <element signature="e#6253#6292#0" expanded="true" />
-            <element signature="e#7280#7311#0" expanded="true" />
-            <element signature="e#7888#7919#0" expanded="true" />
+            <element signature="e#8520#8559#0" expanded="true" />
+            <element signature="e#9547#9578#0" expanded="true" />
+            <element signature="e#10155#10186#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -472,14 +546,9 @@
         <state relative-caret-position="1080">
           <caret line="89" column="8" selection-start-line="89" selection-start-column="8" selection-end-line="89" selection-end-column="8" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1498#1499#0" expanded="true" />
-            <element signature="e#1529#1530#0" expanded="true" />
-            <element signature="e#2274#2275#0" expanded="true" />
-            <element signature="e#2293#2294#0" expanded="true" />
-            <element signature="e#6253#6292#0" expanded="true" />
-            <element signature="e#7280#7311#0" expanded="true" />
-            <element signature="e#7888#7919#0" expanded="true" />
+            <element signature="e#8520#8559#0" expanded="true" />
+            <element signature="e#9547#9578#0" expanded="true" />
+            <element signature="e#10155#10186#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -506,14 +575,9 @@
         <state relative-caret-position="1602">
           <caret line="89" column="8" lean-forward="true" selection-start-line="89" selection-start-column="8" selection-end-line="89" selection-end-column="8" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1498#1499#0" expanded="true" />
-            <element signature="e#1529#1530#0" expanded="true" />
-            <element signature="e#2274#2275#0" expanded="true" />
-            <element signature="e#2293#2294#0" expanded="true" />
-            <element signature="e#6253#6292#0" expanded="true" />
-            <element signature="e#7280#7311#0" expanded="true" />
-            <element signature="e#7888#7919#0" expanded="true" />
+            <element signature="e#8520#8559#0" expanded="true" />
+            <element signature="e#9547#9578#0" expanded="true" />
+            <element signature="e#10155#10186#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -564,8 +628,8 @@
     <entry file="file://$PROJECT_DIR$/Gogole/src/org/jlc/arar/mozzarella/pizza/Pizza.java" />
     <entry file="file://$PROJECT_DIR$/src/org/jlc/arar/mozzarella/Connection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
+        <state relative-caret-position="204">
+          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -622,29 +686,24 @@
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_151/javafx-src.zip!/javafx/scene/control/ToolBar.java" />
-    <entry file="file://$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java">
+    <entry file="file://$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/Pizza.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
+        <state relative-caret-position="5">
+          <caret line="98" column="32" selection-start-line="98" selection-start-column="25" selection-end-line="98" selection-end-column="32" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#8520#8559#0" expanded="true" />
+            <element signature="e#9547#9578#0" expanded="true" />
+            <element signature="e#10155#10186#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/Pizza.java">
+    <entry file="file://$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="304" column="31" selection-start-line="304" selection-start-column="31" selection-end-line="304" selection-end-column="31" />
+        <state relative-caret-position="289">
+          <caret line="59" column="31" selection-start-line="59" selection-start-column="31" selection-end-line="59" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1498#1499#0" expanded="true" />
-            <element signature="e#1529#1530#0" expanded="true" />
-            <element signature="e#2274#2275#0" expanded="true" />
-            <element signature="e#2293#2294#0" expanded="true" />
-            <element signature="e#6253#6292#0" expanded="true" />
-            <element signature="e#7280#7311#0" expanded="true" />
-            <element signature="e#7888#7919#0" expanded="true" />
           </folding>
         </state>
       </provider>
