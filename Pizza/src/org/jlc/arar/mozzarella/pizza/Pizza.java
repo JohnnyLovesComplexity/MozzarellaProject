@@ -17,7 +17,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.lang.reflect.MalformedParametersException;
 import java.net.*;
+import java.nio.charset.MalformedInputException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -135,6 +137,7 @@ public class Pizza extends Application implements Runnable {
 	@Override
 	public void run() {
 		try {
+			// Try to open the port 80, but as it is usually occupied, try to connect to 8080 if failed.
 			try {
 				soc = new ServerSocket(80);
 				log("Server open on port 80");
@@ -143,9 +146,13 @@ public class Pizza extends Application implements Runnable {
 				log("Server open on port 8080");
 			}
 			
+			// Wait for "start"
 			while (getState() == State.INITIALIZED);
 			
+			// Main loop
 			while (getState().isRunning()) {
+				
+				// Pause
 				while (getState() == State.PAUSED) {
 					try {
 						Thread.sleep(50);
@@ -154,6 +161,7 @@ public class Pizza extends Application implements Runnable {
 					}
 				}
 				
+				// Accept a connection (it will block this thread until a connection arrived)
 				Socket com_cli = soc.accept();
 				System.out.println("Connected");
 				StringBuilder message = new StringBuilder();
@@ -163,7 +171,7 @@ public class Pizza extends Application implements Runnable {
 				while(!(line = in.readLine()).equals(""))
 					message.append(line); // Tester "\r\n" comme valeur sentinnelle
 
-				// Manage the client by creating a thread for this one (see createThread() ).
+				// Manage the client by creating a thread for this one (see createThread()).
 				Thread t = createThread(com_cli, message.toString());
 				t.start();
 				connections.add(t);
@@ -181,28 +189,40 @@ public class Pizza extends Application implements Runnable {
 		
 		stopServer();
 	}
-
-	private static  String constructResponse(String message){
+	
+	/**
+	 * Create a response for the client according to the value of {@code message}.
+	 * @param message The message that the client gave
+	 * @return An answer for the client.
+	 */
+	private static String constructResponse(String message) throws MalformedParametersException {
 		String response = "";
 		String url;
-
+		
 		StringBuilder beginning = new StringBuilder();
 		int i =0;
-		while(!beginning.toString().endsWith("HTTP/1.1")){
+		while (!beginning.toString().endsWith("HTTP/1.1")) {
 			beginning.append(message.charAt(i));
 			i++;
 		}
-
-		url = beginning.toString().split("\r\n")[0].replace("GET ","")
+		
+		String[] parts = beginning.toString().split("\r\n");
+		
+		if (parts.length == 0)
+			throw new MalformedParametersException("\"" + message + "\" is not a valid message from the client.");
+		
+		url = parts[0].replace("GET ","")
 				.replace("HTTP/1.1","")
 				.replace(" ","");
-		System.out.println(url);
-
+		System.out.println("Pizza.constructResponse> " + url);
+		
+		// If the file does not exist...
 		if(!(url.equals("/avis-recette.txt")
 				|| url.equals("/3-fromages.jpg"))){
-			System.out.println("Le chemin spécifié dans votre requête n'existe pas;\n");
+			System.out.println("Pizza.constructResponse> File does not exist...");
 			response = constructResponseHeader(404);
 		}
+		// If the message is a GET
 		else if(message.contains("GET")){
 			if(url.equals("/avis-recette.txt")){
 				try {
@@ -216,9 +236,11 @@ public class Pizza extends Application implements Runnable {
 			}else if(url.equals("/3-fromages.jpg"))
 			{
 				System.out.println("Envoie de 3-fromages.jpg");
-				//envoie de la reponse relative a l'image
+				// TODO: envoie de la reponse relative a l'image
 			}
-		}else if(message.contains("PUT")){
+		}
+		else if (message.contains("PUT")) {
+			// TODO: Receive file
 			System.out.println("Votre fichier a bien été ajouté au serveur");
 
 		}else{
@@ -232,17 +254,17 @@ public class Pizza extends Application implements Runnable {
 	// Construct Response Header
 	private static String constructResponseHeader(int responseCode) {
 		StringBuilder stringBuilder = new StringBuilder();
-
+		
 		if (responseCode == 200) {
-
+			
 			stringBuilder.append("HTTP/1.1 200 OK\r\n");
 			stringBuilder.append("Date:" + getTimeStamp() + "\r\n");
 			stringBuilder.append("Server:wwww.pizza.com\r\n");
 			stringBuilder.append("Content-Type: text/html\r\n");
 			stringBuilder.append("\r\n");
-
+			
 		} else if (responseCode == 404) {
-
+			
 			stringBuilder.append("HTTP/1.1 404 Not Found\r\n");
 			stringBuilder.append("Date:" + getTimeStamp() + "\r\n");
 			stringBuilder.append("Server:wwww.pizza.com\r\n");
@@ -286,7 +308,13 @@ public class Pizza extends Application implements Runnable {
 		Runtime.getRuntime().halt(0);
 	}
 	
-	protected Thread createThread(@NotNull Socket com_cli, @NotNull String message) {
+	/**
+	 * Create a thread that will manage an answer for the client
+	 * @param com_cli The socket of the client
+	 * @param message The message that the client gave
+	 * @return Return a thread that contain a runnable to manage the client. You have to start it.
+	 */
+	protected Thread createThread(@NotNull Socket com_cli, @NotNull final String message) {
 		return new Thread(() -> {
 			log("New connection: " + com_cli.getInetAddress().getHostName() + " port " + com_cli.getPort());
 			
@@ -297,7 +325,7 @@ public class Pizza extends Application implements Runnable {
 			boolean stopServer = false;
 			try{
 				BufferedWriter response = new BufferedWriter(new OutputStreamWriter(com_cli.getOutputStream()));
-				answer = constructResponse(message.toString());
+				answer = constructResponse(message);
 				response.write(answer);
 				log("Answered \"" + answer +"\"");
 				response.flush();
