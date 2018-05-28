@@ -42,8 +42,6 @@ public class FileGenerator {
 		return !problem;
 	}
 
-
-	
 	public static String readContent(String pathfile) throws IOException {
 		StringBuilder content = new StringBuilder();
 		

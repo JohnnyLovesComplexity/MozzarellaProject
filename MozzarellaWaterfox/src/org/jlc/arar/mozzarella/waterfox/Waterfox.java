@@ -40,7 +40,7 @@ public class Waterfox extends Application {
 
 		System.out.println("Connexion...");
 		try{
-			Socket con_serv = new Socket(InetAddress.getByName("127.0.0.1"),80);
+			Socket con_serv = new Socket(InetAddress.getByName("192.168.43.204"),80);
 			try {
 
 				System.out.println("Connected");
@@ -69,7 +69,7 @@ public class Waterfox extends Application {
 						getRequest(printWriter, "/avis-recette.txt ");
 						break;
 					case 2 :
-						getRequest(printWriter, "/3-fromages.png ");
+						getRequest(printWriter, "/3-fromages.jpg ");
 						break;
 					case 3 :
 						putRequest(printWriter);
@@ -118,6 +118,21 @@ public class Waterfox extends Application {
 							}
 							FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/avis-recette.txt");
 						}
+                        if(i == 2)
+                        {
+                            assert message != null;
+                            String[] lines = message.split("\r\n");
+                            boolean suivante = false;
+                            StringBuilder content = new StringBuilder();
+                            for (String line:lines) {
+                                if(line.toLowerCase().contains(""))
+                                    suivante = true;
+                                else if(suivante){
+                                    content.append(line);
+                                }
+                            }
+                            FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/3-fromages.jpg");
+                        }
 						System.out.println("Serveur déconecté");
 						printWriter.close();
 						try {
