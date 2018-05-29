@@ -1,10 +1,14 @@
 package org.jlc.arar.mozzarella.waterfox;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -25,8 +29,10 @@ public class Waterfox extends Application {
 	
 	private WebView w_view;
 	private WebEngine w_engine;
-	
-	public static void main(String[] args) {
+
+
+
+    public static void main(String[] args) {
 		launch(args);
 	}
 	
@@ -38,10 +44,33 @@ public class Waterfox extends Application {
 		bt_refresh = new Button("Refresh");
 		w_view = new WebView();
 		w_engine = w_view.getEngine();
+		TextField field = new TextField();
+        Button buttonS = new Button("Submit");
+
+        // Create a WebView
+        WebView browser = new WebView();
+        // Get WebEngine via WebView
+        WebEngine webEngine = browser.getEngine();
+
+        VBox root = new VBox();
+        HBox hb = new HBox();
+        hb.getChildren().addAll(field, buttonS);
+        root.setPadding(new Insets(5));
+        root.setSpacing(5);
+        root.getChildren().addAll(hb, browser);
+
+        Scene scene = new Scene(root);
+
+        primaryStage.setTitle("Mozzarella Waterfox");
+        primaryStage.setScene(scene);
+        primaryStage.setWidth(450);
+        primaryStage.setHeight(300);
+
+        primaryStage.show();
 
 		System.out.println("Connexion...");
 		try{
-			Socket con_serv = new Socket(InetAddress.getByName(/*"192.168.43.204"*/"127.0.0.1"),8080);
+			Socket con_serv = new Socket(InetAddress.getByName("127.0.0.1"),80);
 			try {
 
 				System.out.println("Connected");
@@ -61,16 +90,16 @@ public class Waterfox extends Application {
 				printWelcome();
 				System.out.println("Vous souhaitez :\n" +
 						"1 : Acceder au fichier avis-recette.txt\n" +
-						"2 : Acceder à l'image pizza.png\n" +
+						"2 : Acceder à l'image 3-fromages.jpg\n" +
 						"3 : Deposer votre propre fichier");
 				int i = sc.nextInt();
 				String request = "";
 				switch (i){
 					case 1 :
-						getRequest(printWriter, "/avis-recette.txt ");
+						getRequest(printWriter,con_serv, "/avis-recette.txt ");
 						break;
 					case 2 :
-						getRequest(printWriter, "/3-fromages.jpg ");
+						getRequest(printWriter,con_serv, "/3-fromages.jpg ");
 						break;
 					case 3 :
 						putRequest(printWriter);
@@ -97,7 +126,32 @@ public class Waterfox extends Application {
 						try {
 							String line;
 							while((line = in.readLine()) !=null){
-								message += "\r\n" + line;
+								if(i==2){
+									DataInputStream inIm = new DataInputStream(con_serv.getInputStream());
+									OutputStream dos = new FileOutputStream("MozzarellaWaterfox/3-fromages.jpg");
+									int count;
+									byte[] buffer = new byte[18000];
+									boolean eohFound = false;
+									while ((count = inIm.read(buffer)) != -1)
+									{
+										if(!eohFound){
+											String string = new String(buffer, 0, count);
+											int indexOfEOH = string.indexOf("\r\n\r\n");
+											if(indexOfEOH != -1) {
+												count = count-indexOfEOH-4;
+												buffer = string.substring(indexOfEOH+4).getBytes();
+												eohFound = true;
+											} else {
+												count = 0;
+											}
+										}
+										dos.write(buffer, 0, count);
+										dos.flush();
+									}
+
+								}else{
+									message += "\r\n" + line;
+								}
 							}
 
 						} catch (IOException e) {
@@ -121,18 +175,18 @@ public class Waterfox extends Application {
 						}
                         if(i == 2)
                         {
-                            assert message != null;
+                            /*assert message != null;
                             String[] lines = message.split("\r\n");
                             boolean suivante = false;
                             StringBuilder content = new StringBuilder();
                             for (String line:lines) {
-                                if(line.toLowerCase().contains(""))
+                                if(line.toLowerCase().contains("image/jpg"))
                                     suivante = true;
                                 else if(suivante){
                                     content.append(line);
                                 }
                             }
-                            FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/3-fromages.jpg");
+                            FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/3-fromages.jpg");*/
                         }
 						System.out.println("Serveur déconecté");
 						printWriter.close();
@@ -174,39 +228,51 @@ public class Waterfox extends Application {
 		Scanner sc2 = new Scanner(System.in);
 		String name = sc2.nextLine();
 		try{
-			String contentOfFile = FileGenerator.readContent("/"+name);
-			String path = "/new.txt";
-			request.print("PUT " + path + " HTTP/1.1\r\n"); // "+path+"
+			String path = "MozzarellaWaterfox/"+name;
+			String contentOfFile = FileGenerator.readContent(path);
+			request.print("PUT /" + name + " HTTP/1.1\r\n"); // "+path+"
 			request.print("Accept-Language: en-us\r\n");
 			request.print("Connection: Keep-Alive\r\n");
 			request.print("Content-type: text/html\r\n");
-			request.print("Content-Length: 0\r\n");
-			request.print("\r\n");
+			request.print("Content-Length: 15\r\n");
 
 			System.out.println("PUT Request Header Sent!");
 
 			// Send the Data to be PUT
-			request.println(contentOfFile);
+			request.print(contentOfFile);
+			request.print("\r\n");
 			request.flush();
 
 			System.out.println("PUT Data Sent!");
 
 		}catch (IOException ex){
-			System.out.println(name + "doesn't exist.");
+			System.out.println(name + " doesn't exist.");
 		}
 
 
 	}
 
 
-	private static void getRequest(PrintWriter request, String path){
+	private static void getRequest(PrintWriter request, Socket sock,String path){
 
-		request.print("GET " + path + " HTTP/1.1\r\n");
-		request.print("Accept-Language: en-us\r\n");
-		request.print("Connection: Keep-Alive\r\n");
-		request.print("\r\n\r\n");
+    	if(path.contains("jpg")){
+			DataOutputStream bw = null;
+			try {
+				bw = new DataOutputStream(sock.getOutputStream());
+				bw.writeBytes("GET "+path+" HTTP/1.1\r\n\r\n");
+				bw.writeBytes("Host: www.pizza.com:80\r\n\r\n");
+				bw.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else{
+			request.print("GET " + path + " HTTP/1.1\r\n");
+			request.print("Accept-Language: en-us\r\n");
+			request.print("Connection: Keep-Alive\r\n");
+			request.print("\r\n\r\n");
 
-		request.flush();
+			request.flush();
+		}
 		System.out.println("GET Request Header Sent!");
 
 	}
