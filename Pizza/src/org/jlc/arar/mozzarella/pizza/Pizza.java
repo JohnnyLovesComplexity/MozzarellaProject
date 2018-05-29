@@ -22,6 +22,7 @@ import java.lang.reflect.MalformedParametersException;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Function;
 
 public class Pizza extends Application implements Runnable {
 	
@@ -163,16 +164,21 @@ public class Pizza extends Application implements Runnable {
 				
 				// Accept a connection (it will block this thread until a connection arrived)
 				Socket com_cli = soc.accept();
-				System.out.println("Connected");
+				/*System.out.println("Connected");
 				StringBuilder message = new StringBuilder();
 				BufferedReader in = new BufferedReader(new InputStreamReader(com_cli.getInputStream()));
 
-				String line = "";
-				while(!(line = in.readLine()).equals(""))
+				String line = in.readLine();
+				while (line != null && !line.isEmpty()) {
 					message.append(line); // Tester "\r\n" comme valeur sentinnelle
+					line = in.readLine();
+				}*/
 
 				// Manage the client by creating a thread for this one (see createThread()).
-				Thread t = createThread(com_cli, message.toString());
+				Thread t = /*createThread(com_cli, message.toString())*/new Thread(new ConnectionHandler(com_cli, s -> {
+					log(s);
+					return null;
+				}));
 				t.start();
 				connections.add(t);
 
@@ -252,6 +258,7 @@ public class Pizza extends Application implements Runnable {
 
 
 	// Construct Response Header
+	@NotNull
 	private static String constructResponseHeader(int responseCode) {
 		StringBuilder stringBuilder = new StringBuilder();
 		

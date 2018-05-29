@@ -41,7 +41,7 @@ public class Waterfox extends Application {
 
 		System.out.println("Connexion...");
 		try{
-			Socket con_serv = new Socket(InetAddress.getByName("192.168.43.204"),80);
+			Socket con_serv = new Socket(InetAddress.getByName(/*"192.168.43.204"*/"127.0.0.1"),8080);
 			try {
 
 				System.out.println("Connected");
