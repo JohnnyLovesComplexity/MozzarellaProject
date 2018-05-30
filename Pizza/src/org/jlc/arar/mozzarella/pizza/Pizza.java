@@ -141,11 +141,10 @@ public class Pizza extends Application implements Runnable {
 			// Try to open the port 80, but as it is usually occupied, try to connect to 8080 if failed.
 			try {
 				soc = new ServerSocket(80);
-				log("Server open on port 80");
 			} catch (SocketException ex) {
 				soc = new ServerSocket(8080);
-				log("Server open on port 8080");
 			}
+			log("Server open on port " + soc.getLocalPort());
 			
 			// Wait for "start"
 			while (getState() == State.INITIALIZED);
