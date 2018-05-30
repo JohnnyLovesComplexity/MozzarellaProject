@@ -164,17 +164,7 @@ public class Pizza extends Application implements Runnable {
 				
 				// Accept a connection (it will block this thread until a connection arrived)
 				Socket com_cli = soc.accept();
-				/*System.out.println("Connected");
-				StringBuilder message = new StringBuilder();
-				BufferedReader in = new BufferedReader(new InputStreamReader(com_cli.getInputStream()));
 
-				String line = in.readLine();
-				while (line != null && !line.isEmpty()) {
-					message.append(line); // Tester "\r\n" comme valeur sentinnelle
-					line = in.readLine();
-				}*/
-				
-				// Manage the client by creating a thread for this one (see createThread()).
 				Thread t = /*createThread(com_cli, message.toString())*/new Thread(new ConnectionHandler(com_cli, s -> {
 					log(s);
 					return null;
@@ -195,165 +185,7 @@ public class Pizza extends Application implements Runnable {
 		
 		stopServer();
 	}
-	
-	/**
-	 * Create a response for the client according to the value of {@code message}.
-	 * @param message The message that the client gave
-	 * @return An answer for the client.
-	 */
-	private static String constructResponse(String message, Socket sock) throws MalformedParametersException {
-		String response = "";
-		String url;
-		
-		StringBuilder beginning = new StringBuilder();
-		int i = 0;
-		while (i < message.length() && !beginning.toString().endsWith("HTTP/1.1")) {
-			beginning.append(message.charAt(i));
-			i++;
-		}
-		
-		String[] parts = beginning.toString().split("\r\n");
-		
-		if (parts.length == 0)
-			throw new MalformedParametersException("\"" + message + "\" is not a valid message from the client.");
 
-		url = parts[0].replace("GET ","")
-				.replace("PUT ", "")
-				.replace("HTTP/1.1","")
-				.replace(" ","");
-		System.out.println("Pizza.constructResponse> " + url);
-
-		// If the message is a PUT
-		if(message.contains("PUT")){
-			String[] receveided = message.split("\r\n");
-			boolean text = false;
-			StringBuilder sended = new StringBuilder();
-			for (String line:receveided) {
-				if(line.toLowerCase().contains("content-length"))
-					text = true;
-				else if(text){
-					sended.append(line);
-				}
-			}
-			FileGenerator.generateFile(sended.toString(),"Pizza/site" + url);
-			response = constructResponseHeader(201,0);
-		}
-		// If the message is a GET
-		else if(message.contains("GET")){
-			// If the file does not exist...
-			if(!(url.equals("/avis-recette.txt")
-					|| url.equals("/3-fromages.jpg"))){
-				System.out.println("Pizza.constructResponse> File does not exist...");
-				response = constructResponseHeader(404,0);
-			}else if(url.equals("/avis-recette.txt")){
-				try {
-					String content = FileGenerator.readContent("Pizza/site/avis-recette.txt");
-					response = constructResponseHeader(200,1);
-					response += content + "\r\n";
-				} catch (IOException e) {
-					System.out.println("Chemin spécifié introuvable\n");
-					response = constructResponseHeader(404,0);
-				}
-			}else if(url.equals("/3-fromages.jpg"))
-			{
-				try {
-					System.out.println("Sending> 3-fromages.jpg");
-					response = constructResponseHeader(200,2);
-					String content = FileGenerator.readContent("Pizza/site" + url);
-					sendImage(sock, message, url);
-					response += content + "\r\n";
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}else{
-			System.out.println("The request can't be interpreted");
-			response = constructResponseHeader(404,0);
-		}
-
-		return response;
-	}
-
-
-	// Construct Response Header
-	private static String constructResponseHeader(int responseCode, int dem) {
-		StringBuilder stringBuilder = new StringBuilder();
-		
-		if (responseCode == 200) {
-			if(dem == 1){
-                stringBuilder.append("HTTP/1.1 200 OK\r\n");
-                stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-                stringBuilder.append("Server:wwww.pizza.com\r\n");
-                stringBuilder.append("Content-Type: text/html\r\n");
-                stringBuilder.append("\r\n\r\n");
-            }else{
-                stringBuilder.append("HTTP/1.1 200 OK\r\n");
-                stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-                stringBuilder.append("Server:wwww.pizza.com\r\n");
-                stringBuilder.append("Accept-Ranges: bytes\r\n");
-                stringBuilder.append("Content-Type: image/jpg\r\n");
-                stringBuilder.append("\r\n\r\n");
-            }
-
-
-		} else if (responseCode == 404) {
-			
-			stringBuilder.append("HTTP/1.1 404 Not Found\r\n");
-			stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-			stringBuilder.append("Server:wwww.pizza.com\r\n");
-			stringBuilder.append("\r\n\r\n");
-		} else if (responseCode == 304) {
-			stringBuilder.append("HTTP/1.1 304 Not Modified\r\n");
-			stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-			stringBuilder.append("Server:wwww.pizza.com\r\n");
-			stringBuilder.append("\r\n\r\n");
-		}else if(responseCode == 201){
-			stringBuilder.append("HTTP/1.1 201 Created\r\n");
-			stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-			stringBuilder.append("Server:wwww.pizza.com\r\n");
-			stringBuilder.append("Content-Location: /new.html\n\r\n");
-			stringBuilder.append("\r\n\r\n");
-		}
-		return stringBuilder.toString();
-	}
-
-	private static void sendImage(Socket sock,String message, String path){
-		try {
-			String content = FileGenerator.readContent("Pizza/site" + path);
-			BufferedWriter response = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
-			response.write(constructResponseHeader(200,0));
-			response.write(content);
-			response.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-
-		/*DataOutputStream bw = null;
-		try {
-			byte[] content = FileGenerator.readContentImage("Pizza/site" + path);
-			bw = new DataOutputStream(sock.getOutputStream());
-			bw.writeBytes("HTTP/1.1 200 OK\r\n");
-			bw.writeBytes("Date:" + getCurrentTime() + "\r\n");
-			bw.writeBytes("Server:wwww.pizza.com\r\n");
-			bw.writeBytes("Accept-Ranges: bytes\r\n");
-			bw.writeBytes("Content-Type: image/jpg\r\n");
-			bw.write(content);
-			bw.writeBytes("\r\n");
-			bw.writeBytes("\r\n\r\n");
-			bw.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-
-	}
-
-	private static String getCurrentTime() {
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
-		String formattedDate = sdf.format(date);
-		return formattedDate;
-	}
 	
 	@Override
 	public void stop() throws Exception {
@@ -395,36 +227,13 @@ public class Pizza extends Application implements Runnable {
 			boolean stopServer = false;
 			try{
 				BufferedWriter response = new BufferedWriter(new OutputStreamWriter(com_cli.getOutputStream()));
-				answer = constructResponse(message, com_cli);
+				//answer = constructResponse(message, com_cli);
 				response.write(answer);
 				log("Answered \"" + answer +"\"");
 				response.flush();
 			}catch(IOException ex){
 				ex.printStackTrace();
 			}
-
-			/*try {
-				if (message.toLowerCase().equals("time")) {
-					SimpleDateFormat sdf = new SimpleDateFormat("hh-MM-ss");
-					answer = sdf.format(new Date());
-				} else if (message.toLowerCase().equals("exit")) {
-					answer = "Shutting down...";
-					stopServer = true;
-				} else if (message.toLowerCase().equals("hello world!"))
-					answer = "Hello back!";
-				else
-					answer = message;
-				
-				connection.answer(answer);
-				log("Answered \"" + answer + "\"");
-			} catch (OperationNotSupportedException ex) {
-				ex.printStackTrace();
-				log(ex.getMessage());
-			}
-			finally {
-				if (stopServer)
-					stopServer();
-			}*/
 
 			try {
 				com_cli.close();

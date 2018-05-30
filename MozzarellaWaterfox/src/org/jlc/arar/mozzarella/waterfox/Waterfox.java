@@ -14,8 +14,11 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.jlc.arar.mozzarella.FileGenerator;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
+import java.nio.ByteBuffer;
 import java.util.Scanner;
 
 public class Waterfox extends Application {
@@ -96,10 +99,10 @@ public class Waterfox extends Application {
 				String request = "";
 				switch (i){
 					case 1 :
-						getRequest(printWriter,con_serv, "/avis-recette.txt ");
+						getRequest(printWriter,con_serv, "/Pizza/site/avis-recette.txt ");
 						break;
 					case 2 :
-						getRequest(printWriter,con_serv, "/3-fromages.jpg ");
+						getRequest(printWriter,con_serv, "/Pizza/site/3-fromages.jpg ");
 						break;
 					case 3 :
 						putRequest(printWriter);
@@ -124,36 +127,11 @@ public class Waterfox extends Application {
 					@Override
 					public void run() {
 						try {
-							String line;
-							while((line = in.readLine()) !=null){
-								if(i==2){
-									DataInputStream inIm = new DataInputStream(con_serv.getInputStream());
-									OutputStream dos = new FileOutputStream("MozzarellaWaterfox/3-fromages.jpg");
-									int count;
-									byte[] buffer = new byte[18000];
-									boolean eohFound = false;
-									while ((count = inIm.read(buffer)) != -1)
-									{
-										if(!eohFound){
-											String string = new String(buffer, 0, count);
-											int indexOfEOH = string.indexOf("\r\n\r\n");
-											if(indexOfEOH != -1) {
-												count = count-indexOfEOH-4;
-												buffer = string.substring(indexOfEOH+4).getBytes();
-												eohFound = true;
-											} else {
-												count = 0;
-											}
-										}
-										dos.write(buffer, 0, count);
-										dos.flush();
-									}
-
-								}else{
-									message += "\r\n" + line;
-								}
+							String line = in.readLine();
+							while(line !=null && !line.equals(" ")){
+								message += "\r\n" + line;
+								line = in.readLine();
 							}
-
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -173,20 +151,18 @@ public class Waterfox extends Application {
 							}
 							FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/avis-recette.txt");
 						}
-                        if(i == 2)
+                        else if(i == 2)
                         {
-                            /*assert message != null;
-                            String[] lines = message.split("\r\n");
-                            boolean suivante = false;
-                            StringBuilder content = new StringBuilder();
-                            for (String line:lines) {
-                                if(line.toLowerCase().contains("image/jpg"))
-                                    suivante = true;
-                                else if(suivante){
-                                    content.append(line);
-                                }
-                            }
-                            FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/3-fromages.jpg");*/
+							assert message != null;
+							int i =0;
+							StringBuilder content = new StringBuilder();
+							while(content.toString().contains("\r\n\r\n")){
+								content.append(message.charAt(i));
+								i++;
+							}
+							String result = message.replace(content.toString(),"");
+
+                            FileGenerator.generateFile(result,"MozzarellaWaterfox/receveided/3-fromages.jpg");
                         }
 						System.out.println("Serveur déconecté");
 						printWriter.close();
@@ -218,7 +194,6 @@ public class Waterfox extends Application {
 		System.out.println("Bienvenue !");
 		System.out.println("--------");
 		System.out.println("Serveur WEB : Par Valentin Berger, Léa Chemoul, Philippine Cluniat, Amal Ben Ismail");
-		System.out.println("Derniere version : 27/05/2018");
 		System.out.println("--------");
 	}
 
@@ -228,13 +203,13 @@ public class Waterfox extends Application {
 		Scanner sc2 = new Scanner(System.in);
 		String name = sc2.nextLine();
 		try{
-			String path = "MozzarellaWaterfox/"+name;
+			String path = "MozzarellaWaterfox/file/"+name;
 			String contentOfFile = FileGenerator.readContent(path);
-			request.print("PUT /" + name + " HTTP/1.1\r\n"); // "+path+"
+			request.print("PUT /" + name + " HTTP/1.1\r\n");
 			request.print("Accept-Language: en-us\r\n");
 			request.print("Connection: Keep-Alive\r\n");
 			request.print("Content-type: text/html\r\n");
-			request.print("Content-Length: 15\r\n");
+			request.print("Content-Length: \r\n");
 
 			System.out.println("PUT Request Header Sent!");
 
