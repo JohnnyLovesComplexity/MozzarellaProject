@@ -175,9 +175,9 @@ public class ConnectionHandler implements Runnable {
 			out_data.print("Server: Pizza Web Server");
             out_data.print("Content-Type: " + MimeTypeManager.parse(f) + "\r\n"); // TODO: get the mimetype
             out_data.print("Content-Length: " + data.length + "\r\n");
-            out_data.print("");
+            out_data.print("\r\n\r\n");
             out_data.write(data, 0, data.length);
-			out_data.print("");
+			out_data.print("\r\n\r\n");
 
 
 			out_data.flush();
