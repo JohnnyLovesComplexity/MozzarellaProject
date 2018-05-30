@@ -88,19 +88,10 @@ public class ConnectionHandler implements Runnable {
 
 		boolean keepRunning = true;
 		String line = "";
-		boolean put = false;
-		String puturl = "";
-		boolean readText = false;
-		File g = null;
-		PrintWriter pw = null;
-		StringBuilder text = new StringBuilder();
 		try {
-			while (keepRunning && (line = in_data.readLine()) != null) {
+			line = in_data.readLine();
+			if(line != null){
 				String[] parts = line.split(" ");
-				if (parts.length < 2) continue;
-					//throw new IllegalArgumentException("Cannot read properly the request sent by the client: " + Arrays.toString(parts));
-
-				// In the case the client wants a file
 				if (parts[0].equals("GET")) {
 					// Get the file wanted by the client
 					String url = parts[1];
@@ -116,46 +107,38 @@ public class ConnectionHandler implements Runnable {
 						sendError(Code.NOT_FOUND, f.toString());
 					else {
 						send(f);
-						//so_client.close();
+						so_client.close();
 						tryLog("\"" + url + "\" sent!");
 						keepRunning = false;
 					}
 				}
 				else if (parts[0].equals("PUT")) {
-					put = true;
-					// The file added by the client
 					String url = parts[1];
+
 					tryLog("The clients wants to add \"" + url + "\"");
-					puturl = url;
-					g = new File("Pizza/site" + url);
-					pw = new PrintWriter (new BufferedWriter (new FileWriter (g)));
 
-					/*sendError(Code.INTERNAL_SERVER_ERROR);
-					out_data.close();
-					throw new NotImplementedException();*/
-				}else if(put){
-					pw.append(line);
-
-					text.append(line)
-						.append("\r\n");
-					System.out.println(text);
-					if(text.toString().contains("\r\n\r\n")){
-						break;
+					File file = new File("Pizza/site/blackhole.jpg");
+					FileOutputStream fos = new FileOutputStream(file);
+					int arrlen = in_data.readInt();
+					byte[] b = new byte[arrlen];
+					in_data.readFully(b);
+					String received = Arrays.toString(b);
+					String content = "";
+					boolean found = false;
+					int i = 0;
+					while(i<received.length()) {
+						if(found)
+							fos.write(received.charAt(i));
+						if(content.contains("Content-length"))
+							found = true;
+						i++;
 					}
+					sendError(Code.CREATED);
+					//fos.write(b, 0 , b.length);
 				}
 			}
-			if(put){
-				pw.close();
-				//FileGenerator.generateFile(text.toString(),puturl);
-				tryLog("File created \"" + puturl + "\"");
-			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		try {
-			so_client.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+			} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 

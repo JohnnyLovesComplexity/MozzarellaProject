@@ -48,7 +48,7 @@ public class Pizza extends Application implements Runnable {
 	
 	private State state;
 	private Thread th_route;
-	
+
 	private ServerSocket soc;
 	private Lexicon<Thread> connections;
 	
@@ -160,7 +160,7 @@ public class Pizza extends Application implements Runnable {
 						ex.printStackTrace();
 					}
 				}
-				
+
 				// Accept a connection (it will block this thread until a connection arrived)
 				Socket com_cli = soc.accept();
 

@@ -20,6 +20,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Scanner;
+import java.util.SortedMap;
 
 public class Waterfox{
 	
@@ -70,7 +71,7 @@ public class Waterfox{
 						getRequest(printWriter,con_serv, "/Pizza/site/3-fromages.jpg ");
 						break;
 					case 3 :
-						putRequest(printWriter);
+						putRequest(printWriter, con_serv, "MozzarellaWaterfox/file/blackhole.jpg");
 						break;
 				}
 				String message = "";
@@ -153,13 +154,28 @@ public class Waterfox{
 		System.out.println("--------");
 	}
 
-	private static void putRequest(PrintWriter request){
+	private static void putRequest(PrintWriter request, Socket socket, String imgPath){
 
-		System.out.println("Name of the file to send :");
+		/*System.out.println("Name of the file to send :");
 		Scanner sc2 = new Scanner(System.in);
-		String name = sc2.nextLine();
+		String name = sc2.nextLine();*/
 		try{
-			String path = "MozzarellaWaterfox/file/"+name;
+			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+			File file = new File(imgPath);
+			byte[] b = new byte[(int) file.length()];
+			FileInputStream fis = new FileInputStream(file);
+			fis.read(b);
+			fis.close();
+			dos.write("PUT /blacckhole.jpg HTTP/1.1\r\n".getBytes());
+			dos.write("Content-length: ".getBytes());
+			dos.writeInt((int) file.length());
+			dos.write("\r\n".getBytes());
+			dos.flush();
+			dos.write(b, 0, b.length);
+			//dos.write("\r\n\r\n".getBytes());
+			dos.flush();
+
+			/*String path = "MozzarellaWaterfox/file/"+name;
 			String contentOfFile = FileGenerator.readContent(path);
 			request.print("PUT /" + name + " HTTP/1.1\r\n");
 			request.print("Accept-Language: en-us\r\n");
@@ -174,10 +190,10 @@ public class Waterfox{
 			request.print("\r\n\r\n");
 			request.flush();
 
-			System.out.println("PUT Data Sent!");
+			System.out.println("PUT Data Sent!");*/
 
 		}catch (IOException ex){
-			System.out.println(name + " doesn't exist.");
+			System.out.println("File doesn't exist.");
 		}
 	}
 
