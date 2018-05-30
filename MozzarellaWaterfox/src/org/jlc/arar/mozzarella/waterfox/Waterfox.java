@@ -21,7 +21,7 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Scanner;
 
-public class Waterfox extends Application {
+public class Waterfox{
 	
 	private BorderPane root;
 	
@@ -35,42 +35,7 @@ public class Waterfox extends Application {
 
 
 
-    public static void main(String[] args) {
-		launch(args);
-	}
-	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		root = new BorderPane();
-		tf_url = new TextField();
-		bt_go = new Button("Go");
-		bt_refresh = new Button("Refresh");
-		w_view = new WebView();
-		w_engine = w_view.getEngine();
-		TextField field = new TextField();
-        Button buttonS = new Button("Submit");
-
-        // Create a WebView
-        WebView browser = new WebView();
-        // Get WebEngine via WebView
-        WebEngine webEngine = browser.getEngine();
-
-        VBox root = new VBox();
-        HBox hb = new HBox();
-        hb.getChildren().addAll(field, buttonS);
-        root.setPadding(new Insets(5));
-        root.setSpacing(5);
-        root.getChildren().addAll(hb, browser);
-
-        Scene scene = new Scene(root);
-
-        primaryStage.setTitle("Mozzarella Waterfox");
-        primaryStage.setScene(scene);
-        primaryStage.setWidth(450);
-        primaryStage.setHeight(300);
-
-        primaryStage.show();
-
+	public static void main(String[] args) {
 		System.out.println("Connexion...");
 		try{
 			Socket con_serv = new Socket(InetAddress.getByName("127.0.0.1"),80);
@@ -108,87 +73,78 @@ public class Waterfox extends Application {
 						putRequest(printWriter);
 						break;
 				}
-			/*Thread envoyer = new Thread(new Runnable() {
-				String message;
-				@Override
-				public void run() {
-					while(true){
-						message = sc.nextLine();
-						printWriter.println(message);
-						printWriter.flush();
+				String message = "";
+
+				try {
+					String line = in.readLine();
+					while(line !=null && !line.equals(" ")){
+						message += "\r\n" + line;
+						line = in.readLine();
 					}
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			});
-			envoyer.start();*/
-
-
-				Thread recevoir = new Thread(new Runnable() {
-					String message ="";
-					@Override
-					public void run() {
-						try {
-							String line = in.readLine();
-							while(line !=null && !line.equals(" ")){
-								message += "\r\n" + line;
-								line = in.readLine();
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
+				System.out.println("Response Recieved!!\n" + message);
+				if(i == 1)
+				{
+					assert message != null;
+					String[] lines = message.split("\r\n");
+					boolean suivante = false;
+					StringBuilder content = new StringBuilder();
+					for (String line:lines) {
+						if(line.toLowerCase().contains("text/html"))
+							suivante = true;
+						else if(suivante){
+							content.append(line);
 						}
-						System.out.println("Response Recieved!!\n" + message);
-						if(i == 1)
-						{
-							assert message != null;
-							String[] lines = message.split("\r\n");
-							boolean suivante = false;
-							StringBuilder content = new StringBuilder();
-							for (String line:lines) {
-								if(line.toLowerCase().contains("text/html"))
-									suivante = true;
-								else if(suivante){
-									content.append(line);
-								}
-							}
-							FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/avis-recette.txt");
-						}
-                        else if(i == 2)
-                        {
-							assert message != null;
-							int i =0;
+					}
+					FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/avis-recette.txt");
+				}
+				else if(i == 2)
+				{
+					assert message != null;
+					String[] lines = message.split("\r\n");
+					StringBuilder result = new StringBuilder();
+					boolean found = false;
+					for (String line: lines) {
+						if(found && !line.equals(""))
+							result.append(line).append("\r\n");
+						if(line.contains("Content-Length"))
+							found = true;
+					}
+							/*int i =0;
 							StringBuilder content = new StringBuilder();
 							while(content.toString().contains("\r\n\r\n")){
 								content.append(message.charAt(i));
 								i++;
 							}
-							String result = message.replace(content.toString(),"");
+							String result = message.replace(content.toString(),"");*/
 
-                            FileGenerator.generateFile(result,"MozzarellaWaterfox/receveided/3-fromages.jpg");
-                        }
-						System.out.println("Serveur déconecté");
-						printWriter.close();
-						try {
-							con_serv.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				});
-
-				recevoir.start();
-
-
+					FileGenerator.generateFile(result.toString(),"MozzarellaWaterfox/receveided/3-fromages.jpg");
+				}
+				printWriter.close();
+				try {
+					con_serv.close();
+					System.out.println("Serveur déconecté");
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("Error");
+				}
 			} catch (IOException e) {
-
 				e.printStackTrace();
 			}
 
 		}catch(java.net.ConnectException ce){
 			System.out.println("La connexion a échouée.\n");
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
 	}
 
-	private void printWelcome()
+	private static void printWelcome()
 	{
 		System.out.println("--------");
 		System.out.println("Bienvenue !");
@@ -215,7 +171,7 @@ public class Waterfox extends Application {
 
 			// Send the Data to be PUT
 			request.print(contentOfFile);
-			request.print("\r\n");
+			request.print("\r\n\r\n");
 			request.flush();
 
 			System.out.println("PUT Data Sent!");
@@ -223,8 +179,6 @@ public class Waterfox extends Application {
 		}catch (IOException ex){
 			System.out.println(name + " doesn't exist.");
 		}
-
-
 	}
 
 

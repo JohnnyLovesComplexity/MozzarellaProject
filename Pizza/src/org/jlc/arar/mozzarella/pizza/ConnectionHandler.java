@@ -89,7 +89,10 @@ public class ConnectionHandler implements Runnable {
 		boolean keepRunning = true;
 		String line = "";
 		boolean put = false;
+		String puturl = "";
 		boolean readText = false;
+		File g = null;
+		PrintWriter pw = null;
 		StringBuilder text = new StringBuilder();
 		try {
 			while (keepRunning && (line = in_data.readLine()) != null) {
@@ -113,37 +116,46 @@ public class ConnectionHandler implements Runnable {
 						sendError(Code.NOT_FOUND, f.toString());
 					else {
 						send(f);
-						so_client.close();
+						//so_client.close();
 						tryLog("\"" + url + "\" sent!");
 						keepRunning = false;
 					}
 				}
 				else if (parts[0].equals("PUT")) {
+					put = true;
 					// The file added by the client
 					String url = parts[1];
-
 					tryLog("The clients wants to add \"" + url + "\"");
-
-					File f = new File(url);
-					byte[] content = new byte[18000];
-					if(in_data.read(content)!=-1){
-						System.out.println("Reading the content...");
-						FileGenerator.generateFile(Arrays.toString(content),"Pizza/site" + url);
-
-						String response = constructResponseHeader(201,0);
-						out_data.print(response);
-						out_data.flush();
-					}else{
-						System.out.println("Error while reading the content of the file.");
-					}
+					puturl = url;
+					g = new File("Pizza/site" + url);
+					pw = new PrintWriter (new BufferedWriter (new FileWriter (g)));
 
 					/*sendError(Code.INTERNAL_SERVER_ERROR);
 					out_data.close();
 					throw new NotImplementedException();*/
+				}else if(put){
+					pw.append(line);
+
+					text.append(line)
+						.append("\r\n");
+					System.out.println(text);
+					if(text.toString().contains("\r\n\r\n")){
+						break;
+					}
 				}
+			}
+			if(put){
+				pw.close();
+				//FileGenerator.generateFile(text.toString(),puturl);
+				tryLog("File created \"" + puturl + "\"");
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
+		}
+		try {
+			so_client.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
