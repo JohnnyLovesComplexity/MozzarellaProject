@@ -117,12 +117,13 @@ public class ConnectionHandler implements Runnable {
 
 					tryLog("The clients wants to add \"" + url + "\"");
 
-					File file = new File("Pizza/site/blackhole.jpg");
+					File file = new File("Pizza/site/"+url);
 					FileOutputStream fos = new FileOutputStream(file);
-					int arrlen = in_data.readInt();
-					byte[] b = new byte[arrlen];
+					line = in_data.readLine();
+					int length = Integer.parseInt(line.replace("Content-length: ","").replace("\r\n",""));
+					byte[] b = new byte[length];
 					in_data.readFully(b);
-					String received = Arrays.toString(b);
+					String received = new String(b);
 					String content = "";
 					boolean found = false;
 					int i = 0;
