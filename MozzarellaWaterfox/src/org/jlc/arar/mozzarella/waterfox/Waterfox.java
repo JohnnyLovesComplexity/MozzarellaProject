@@ -59,7 +59,7 @@ public class Waterfox{
 				printWelcome();
 				System.out.println("Vous souhaitez :\n" +
 						"1 : Acceder au fichier avis-recette.txt\n" +
-						"2 : Acceder à l'image 3-fromages.jpg\n" +
+						"2 : Acceder à l'image head.jpg\n" +
 						"3 : Deposer votre propre fichier");
 				int i = sc.nextInt();
 				String request = "";
@@ -68,7 +68,7 @@ public class Waterfox{
 						getRequest(printWriter,con_serv, "/Pizza/site/avis-recette.txt ");
 						break;
 					case 2 :
-						getRequest(printWriter,con_serv, "/Pizza/site/3-fromages.jpg ");
+						getRequest(printWriter,con_serv, "/Pizza/site/images/head.jpg");
 						break;
 					case 3 :
 						putRequest(printWriter, con_serv, "MozzarellaWaterfox/file/blackhole.jpg");
@@ -109,7 +109,7 @@ public class Waterfox{
 					StringBuilder result = new StringBuilder();
 					boolean found = false;
 					for (String line: lines) {
-						if(found && !line.equals(""))
+						if(found)
 							result.append(line).append("\r\n");
 						if(line.contains("Content-Length"))
 							found = true;
@@ -122,7 +122,7 @@ public class Waterfox{
 							}
 							String result = message.replace(content.toString(),"");*/
 
-					FileGenerator.generateFile(result.toString(),"MozzarellaWaterfox/receveided/3-fromages.jpg");
+					FileGenerator.generateFile(result.toString(),"MozzarellaWaterfox/receveided/head.jpg");
 				}
 				printWriter.close();
 				try {
@@ -204,8 +204,8 @@ public class Waterfox{
 			DataOutputStream bw = null;
 			try {
 				bw = new DataOutputStream(sock.getOutputStream());
-				bw.writeBytes("GET "+path+" HTTP/1.1\r\n\r\n");
-				bw.writeBytes("Host: www.pizza.com:80\r\n\r\n");
+				bw.writeBytes("GET "+path+" HTTP/1.1\r\n");
+				bw.writeBytes("Host: www.pizza.com:80\r\n");
 				bw.flush();
 			} catch (IOException e) {
 				e.printStackTrace();

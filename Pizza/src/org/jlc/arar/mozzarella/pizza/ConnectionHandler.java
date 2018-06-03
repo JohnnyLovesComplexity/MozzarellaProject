@@ -193,52 +193,6 @@ public class ConnectionHandler implements Runnable {
 		}
 	}
 
-	// Construct Response Header
-	private static String constructResponseHeader(int responseCode, int dem) {
-		StringBuilder stringBuilder = new StringBuilder();
-
-		if (responseCode == 200) {
-			if(dem == 1){
-				stringBuilder.append("HTTP/1.1 200 OK\r\n");
-				stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-				stringBuilder.append("Server:wwww.pizza.com\r\n");
-				stringBuilder.append("Content-Type: text/html\r\n");
-				stringBuilder.append("\r\n\r\n");
-			} else {
-				stringBuilder.append("HTTP/1.1 200 OK\r\n");
-				stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-				stringBuilder.append("Server:wwww.pizza.com\r\n");
-				stringBuilder.append("Accept-Ranges: bytes\r\n");
-				stringBuilder.append("Content-Type: image/jpg\r\n");
-				stringBuilder.append("\r\n\r\n");
-			}
-		} else if (responseCode == 404) {
-			stringBuilder.append("HTTP/1.1 404 Not Found\r\n");
-			stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-			stringBuilder.append("Server:wwww.pizza.com\r\n");
-			stringBuilder.append("\r\n\r\n");
-		} else if (responseCode == 304) {
-			stringBuilder.append("HTTP/1.1 304 Not Modified\r\n");
-			stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-			stringBuilder.append("Server:wwww.pizza.com\r\n");
-			stringBuilder.append("\r\n\r\n");
-		}else if(responseCode == 201){
-			stringBuilder.append("HTTP/1.1 201 Created\r\n");
-			stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
-			stringBuilder.append("Server:wwww.pizza.com\r\n");
-			stringBuilder.append("Content-Location: /new.html\n\r\n");
-			stringBuilder.append("\r\n\r\n");
-		}
-		return stringBuilder.toString();
-	}
-	private static String getCurrentTime() {
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
-		String formattedDate = sdf.format(date);
-		return formattedDate;
-	}
-
-
 	public void sendError(@NotNull Code code, @Nullable String filename) {
 		if (code == null)
 			throw new NullPointerException();
