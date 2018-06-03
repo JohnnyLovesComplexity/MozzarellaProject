@@ -71,11 +71,11 @@ public class ConnectionHandler implements Runnable {
 	public ConnectionHandler(@NotNull Socket so_client, @Nullable Function<String, Void> onLog) throws IOException {
 		setClient(so_client);
 
-		tryLog("New connection: " + so_client.getInetAddress().getHostName() + " port " + so_client.getPort());
-
 		in_data = new DataInputStream(so_client.getInputStream());
 		out_data = new PrintStream(so_client.getOutputStream());
 		setOnLog(onLog);
+		
+		tryLog("New connection: " + so_client.getInetAddress().getHostName() + " port " + so_client.getPort());
 	}
 	public ConnectionHandler(@NotNull Socket so_client) throws IOException {
 		this(so_client, null);
