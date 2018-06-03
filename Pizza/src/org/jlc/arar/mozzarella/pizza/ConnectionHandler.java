@@ -197,17 +197,22 @@ public class ConnectionHandler implements Runnable {
 	public void sendError(@NotNull Code code, @Nullable String filename) {
 		if (code == null)
 			throw new NullPointerException();
-
-		tryLog("Error " + code.getCode() + (filename != null ? ": " + filename : ""));
+		
+		String log = "Error " + code.getCode() + (filename != null ? ": \"" + filename + "\"" : "") + ".";
 
 		if (out_data != null) {
-			out_data.print(code.getCode());
+			out_data.print(code.getMessage());
 			out_data.print("Server: Pizza Web Server");
-			out_data.print("Content-Type: " + MimeTypeManager.parse(filename) + "\r\n");
-			out_data.print("");
-			out_data.println();
+			out_data.print("Content-Type: text/html\r\n");
+			out_data.print("Content-Length: 0\r\n");
+			out_data.print("\r\n");
+			out_data.print("\r\n");
 			out_data.flush();
+			out_data.close();
+			
+			log += " Error sent.";
 		}
+		tryLog(log);
 	}
 	public void sendError(@NotNull Code code) {
 		sendError(code, null);
