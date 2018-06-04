@@ -117,10 +117,9 @@ public class ConnectionHandler implements Runnable {
 
 					tryLog("The clients wants to add \"" + url + "\"");
 
-					File file = new File("Pizza/site/"+url);
-					FileOutputStream fos = new FileOutputStream(file);
-					line = in_data.readLine();
-					int length = Integer.parseInt(line.replace("Content-length: ","").replace("\r\n",""));
+					/*File file = new File("Pizza/site/"+url);
+					FileOutputStream fos = new FileOutputStream(file);*/
+					/*int length = Integer.parseInt(line.replace("Content-length: ","").replace("\r\n",""));
 					byte[] b = new byte[length];
 					in_data.readFully(b);
 					String received = new String(b);
@@ -133,9 +132,26 @@ public class ConnectionHandler implements Runnable {
 						if(content.contains("Content-length"))
 							found = true;
 						i++;
+					}*/
+					String answer;
+					String temp;
+					answer = line + "\n";
+					String length ="";
+					while (!(temp = in_data.readLine()).equals("")) {
+
+						System.out.println("bonjour");
+						if (temp.contains("Length"))
+							if (temp.split(": ").length > 1)
+								length = (temp.split(": "))[1];
+
+						answer += temp + "\n";
 					}
+					System.out.println("Received: \n" + answer);
+					byte data[] = new byte[Integer.parseInt(length)];
+					in_data.readFully(data);
 					sendError(Code.CREATED);
-					//fos.write(b, 0 , b.length);
+					FileGenerator.generateFile(new String(data),"Pizza/site/"+url);
+					//fos.write(data, 0 , data.length);
 				}
 			}
 			} catch (IOException e1) {
