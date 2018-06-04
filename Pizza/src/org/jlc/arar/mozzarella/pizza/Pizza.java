@@ -161,15 +161,17 @@ public class Pizza extends Application implements Runnable {
 					}
 				}
 
-				// Accept a connection (it will block this thread until a connection arrived)
-				Socket com_cli = soc.accept();
-
-				Thread t = /*createThread(com_cli, message.toString())*/new Thread(new ConnectionHandler(com_cli, s -> {
-					log(s);
-					return null;
-				}));
-				t.start();
-				connections.add(t);
+				try {
+					// Accept a connection (it will block this thread until a connection arrived)
+					Socket com_cli = soc.accept();
+					
+					Thread t = /*createThread(com_cli, message.toString())*/new Thread(new ConnectionHandler(com_cli, s -> {
+						log(s);
+						return null;
+					}));
+					t.start();
+					connections.add(t);
+				} catch (SocketException ignored) { }
 
 				for (int i = 0; i < connections.size(); i++) {
 					if (connections.get(i) == null || !connections.get(i).isAlive() || connections.get(i).isInterrupted()) {
