@@ -9,6 +9,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -85,7 +86,7 @@ public class ConnectionHandler implements Runnable {
 	public void run() {
 		if (in_data == null)
 			throw new NullPointerException();
-
+		
 		boolean keepRunning = true;
 		String line = "";
 		try {
@@ -107,7 +108,6 @@ public class ConnectionHandler implements Runnable {
 						sendError(Code.NOT_FOUND, f.toString());
 					else {
 						send(f);
-						so_client.close();
 						tryLog("\"" + url + "\" sent!");
 						keepRunning = false;
 					}
@@ -136,6 +136,18 @@ public class ConnectionHandler implements Runnable {
 					}
 					sendError(Code.CREATED);
 					//fos.write(b, 0 , b.length);
+				}
+				
+				try {
+					while ((line = in_data.readLine()) != null) {
+						if (line.equals("Connection: close")) {
+							so_client.close();
+							tryLog("Close connection with \"" + so_client.getInetAddress().getCanonicalHostName() + "\"");
+							break;
+						}
+					}
+				} catch (SocketException ignored) {
+					tryLog("Close connection with \"" + so_client.getInetAddress().getCanonicalHostName() + "\"");
 				}
 			}
 			} catch (IOException e1) {
@@ -176,6 +188,20 @@ public class ConnectionHandler implements Runnable {
 
 		if (out_data != null) {
 			byte[] data = getFileData(new File("./Pizza/site/404/index.html"));
+			
+			if (data == null) {
+				String message =
+						"<html>" +
+							"<head>" +
+								"<title>Page not found</title>" +
+							"</head>" +
+							"<body>" +
+								"<h1>404 Not found</h1>" +
+								"<p>File not found</p>" +
+							"</body>" +
+						"</html>";
+				data = message.getBytes();
+			}
 			
 			out_data.print(code.getMessage());
 			out_data.print("Server: Pizza Web Server");
