@@ -234,11 +234,11 @@ public class Pizza extends Application implements Runnable {
 				ex.printStackTrace();
 			}
 
-			try {
+			/*try {
 				com_cli.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			}*/
 		});
 	}
 	

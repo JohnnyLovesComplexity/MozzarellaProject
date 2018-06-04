@@ -146,52 +146,26 @@ public class ConnectionHandler implements Runnable {
 	/* CONNECTION HANDLER METHODS */
 
 	private boolean send(@NotNull File f) {
-		if (f == null)
-			throw new NullPointerException();
-
-		FileInputStream in = null;
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		byte[] raw = new byte[4096];
-		int size;
-
-		try {
-			in = new FileInputStream(f);
-
-			while ((size = in.read(raw)) >= 0)
-				baos.write(raw, 0, size);
-
-			baos.flush();
-			baos.close();
-
-			byte[] data = baos.toByteArray();
-
-			out_data.print(Code.OK.getMessage());
-			out_data.print("");
-
-			out_data.print("Server: Pizza Web Server");
-            out_data.print("Content-Type: " + MimeTypeManager.parse(f) + "\r\n"); // TODO: get the mimetype
-            out_data.print("Content-Length: " + data.length + "\r\n");
-            out_data.print("\r\n");
-            out_data.write(data, 0, data.length);
-			out_data.print("\r\n");
-
-
-			out_data.flush();
-			out_data.close();
-
-			return true;
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		byte[] data = getFileData(f);
+		
+		if (data == null)
 			return false;
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+
+		out_data.print(Code.OK.getMessage());
+		out_data.print("");
+
+		out_data.print("Server: Pizza Web Server");
+        out_data.print("Content-Type: " + MimeTypeManager.parse(f) + "\r\n");
+        out_data.print("Content-Length: " + data.length + "\r\n");
+        out_data.print("\r\n");
+        out_data.write(data, 0, data.length);
+		out_data.print("\r\n");
+
+
+		out_data.flush();
+		out_data.close();
+
+		return true;
 	}
 
 	public void sendError(@NotNull Code code, @Nullable String filename) {
@@ -201,11 +175,14 @@ public class ConnectionHandler implements Runnable {
 		String log = "Error " + code.getCode() + (filename != null ? ": \"" + filename + "\"" : "") + ".";
 
 		if (out_data != null) {
+			byte[] data = getFileData(new File("./Pizza/site/404/index.html"));
+			
 			out_data.print(code.getMessage());
 			out_data.print("Server: Pizza Web Server");
 			out_data.print("Content-Type: text/html\r\n");
-			out_data.print("Content-Length: 0\r\n");
+			out_data.print("Content-Length: " + data.length + "\r\n");
 			out_data.print("\r\n");
+			out_data.write(data, 0, data.length);
 			out_data.print("\r\n");
 			out_data.flush();
 			out_data.close();
@@ -216,6 +193,40 @@ public class ConnectionHandler implements Runnable {
 	}
 	public void sendError(@NotNull Code code) {
 		sendError(code, null);
+	}
+	
+	@Nullable
+	public byte[] getFileData(@NotNull File file) {
+		if (file == null)
+			throw new NullPointerException();
+		
+		FileInputStream in = null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] raw = new byte[4096];
+		int size;
+		
+		try {
+			in = new FileInputStream(file);
+			
+			while ((size = in.read(raw)) >= 0)
+				baos.write(raw, 0, size);
+			
+			baos.flush();
+			baos.close();
+			
+			return baos.toByteArray();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	/* GETTERS & SETTERS */
