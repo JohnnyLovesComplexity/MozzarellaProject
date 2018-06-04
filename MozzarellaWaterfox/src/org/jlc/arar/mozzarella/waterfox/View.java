@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.charset.StandardCharsets;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -119,21 +120,20 @@ public class View extends JFrame {
         tabbedPane.setBounds(5, 44, 573, 451);
         contentPane.add(tabbedPane);
 
-        JPanel panelCode = new JPanel();
-        tabbedPane.addTab("Code", null, panelCode, null);
-        panelCode.setLayout(null);
+        JPanel panelText = new JPanel();
+        tabbedPane.addTab("Text", null, panelText, null);
+        panelText.setLayout(null);
 
         txtHeaderArea = new JTextArea();
         txtHeaderArea.setEditable(false);
         scrollHeaderPane = new JScrollPane(txtHeaderArea);
         scrollHeaderPane.setBounds(6, 6, 540, 140);
-        panelCode.add(scrollHeaderPane);
 
         txtPageArea = new JTextArea();
         txtPageArea.setEditable(false);
         scrollPagePane = new JScrollPane(txtPageArea);
         scrollPagePane.setBounds(6, 150, 540, 252);
-        panelCode.add(scrollPagePane);
+        panelText.add(scrollPagePane);
 
         panelPage = new JPanel();
         tabbedPane.addTab("Image", null, panelPage, null);
@@ -144,12 +144,13 @@ public class View extends JFrame {
         panelPage.add(lblImage);
 
         Waterfox client = new Waterfox();
-        while(client.message == "") {}
-        txtPageArea.append(client.message);
+        String data = new String(client.data, StandardCharsets.UTF_8);
+        while(data.equals("")) {}
+        txtPageArea.append(data);
         statusLabel.setText("Reçu");
 
         if( client.path.contains("jpg")) {
-            lblImage.setIcon(new ImageIcon(client.message.getBytes()));
+            lblImage.setIcon(new ImageIcon(client.data));
         }
 
     }

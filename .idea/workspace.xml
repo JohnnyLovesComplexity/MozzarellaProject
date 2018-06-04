@@ -4,6 +4,7 @@
     <list default="true" id="973f36e7-6189-4765-b057-666d595e2a8c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/View.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java" beforeDir="false" afterPath="$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,8 +22,8 @@
       <file leaf-file-name="Waterfox.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="131">
-              <caret line="172" column="29" lean-forward="true" selection-start-line="172" selection-start-column="29" selection-end-line="172" selection-end-column="29" />
+            <state relative-caret-position="156">
+              <caret line="78" lean-forward="true" selection-start-line="78" selection-end-line="78" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -49,8 +50,8 @@
       <file leaf-file-name="ConnectionHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/ConnectionHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="106" column="45" selection-start-line="106" selection-start-column="45" selection-end-line="106" selection-end-column="45" />
+            <state relative-caret-position="142">
+              <caret line="95" column="45" selection-start-line="95" selection-start-column="45" selection-end-line="95" selection-end-column="45" />
               <folding>
                 <element signature="e#8007#8008#0" expanded="true" />
                 <element signature="e#8087#8088#0" expanded="true" />
@@ -78,8 +79,8 @@
       <file leaf-file-name="View.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/View.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="151" column="68" selection-start-line="151" selection-start-column="68" selection-end-line="151" selection-end-column="68" />
+            <state relative-caret-position="199">
+              <caret line="150" column="36" lean-forward="true" selection-start-line="150" selection-start-column="36" selection-end-line="150" selection-end-column="36" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -104,6 +105,9 @@
       <find />
       <find>Base64</find>
       <find>message</find>
+      <find>answer</find>
+      <find>leng</find>
+      <find>data</find>
     </findStrings>
     <dirStrings>
       <dir />
@@ -248,12 +252,8 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="UPDATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/workspace.xml</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/MozzarellaWaterfox/receveided/avis-recette.txt</PATH>
           <PATH vcs="Git" revision="">$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/site/index.html</PATH>
           <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/ConnectionHandler.java</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/Pizza.java</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Created" />
@@ -261,8 +261,7 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="CREATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/MozzarellaWaterfox/receveided/head.jpg</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/site/blackhole.jpg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/site/new.txt</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Deleted" />
@@ -270,11 +269,6 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="true" />
           <option name="myId" value="REMOVED_FROM_REPOSITORY" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/MozzarellaWaterfox/3-fromages.jpg</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/MozzarellaWaterfox/receveided/3-fromages.jpg</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/site/3-fromages.jpg</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/site/new.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/Pizza/site/recette.txt</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Restored" />
@@ -466,7 +460,7 @@
       <workItem from="1526983229728" duration="368000" />
       <workItem from="1526986093616" duration="885000" />
       <workItem from="1527144120103" duration="2048000" />
-      <workItem from="1527495429597" duration="17448000" />
+      <workItem from="1527495429597" duration="18323000" />
     </task>
     <task id="LOCAL-00001" summary="fichier txt et image dans pizza">
       <created>1527148638236</created>
@@ -496,14 +490,22 @@
       <option name="project" value="LOCAL" />
       <updated>1528095743043</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="waterfox modified">
+      <created>1528096959302</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1528096959302</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28098000" />
+    <option name="totallyTimeSpent" value="28973000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="848" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -515,7 +517,7 @@
       <window_info anchor="right" id="Maven Projects" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3286517" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3286517" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3286517" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.3286517" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="3" />
@@ -527,7 +529,7 @@
       <window_info id="UI Designer" order="4" />
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3974719" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.4494382" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -546,11 +548,12 @@
     <MESSAGE value="txt + jpg in pizza" />
     <MESSAGE value="webview for waterfox" />
     <MESSAGE value="client view" />
-    <option name="LAST_COMMIT_MESSAGE" value="client view" />
+    <MESSAGE value="waterfox modified" />
+    <option name="LAST_COMMIT_MESSAGE" value="waterfox modified" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="5" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -773,8 +776,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Pizza/src/org/jlc/arar/mozzarella/pizza/ConnectionHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="106" column="45" selection-start-line="106" selection-start-column="45" selection-end-line="106" selection-end-column="45" />
+        <state relative-caret-position="142">
+          <caret line="95" column="45" selection-start-line="95" selection-start-column="45" selection-end-line="95" selection-end-column="45" />
           <folding>
             <element signature="e#8007#8008#0" expanded="true" />
             <element signature="e#8087#8088#0" expanded="true" />
@@ -819,8 +822,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/Waterfox.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="131">
-          <caret line="172" column="29" lean-forward="true" selection-start-line="172" selection-start-column="29" selection-end-line="172" selection-end-column="29" />
+        <state relative-caret-position="156">
+          <caret line="78" lean-forward="true" selection-start-line="78" selection-end-line="78" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -829,8 +832,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/MozzarellaWaterfox/src/org/jlc/arar/mozzarella/waterfox/View.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="151" column="68" selection-start-line="151" selection-start-column="68" selection-end-line="151" selection-end-column="68" />
+        <state relative-caret-position="199">
+          <caret line="150" column="36" lean-forward="true" selection-start-line="150" selection-start-column="36" selection-end-line="150" selection-end-column="36" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

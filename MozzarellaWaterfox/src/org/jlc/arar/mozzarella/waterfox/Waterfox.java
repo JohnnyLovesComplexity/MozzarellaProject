@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Waterfox{
 
-    static String message;
+    static byte data [];
     static String path;
 
 
@@ -73,7 +73,7 @@ public class Waterfox{
                                 answer += temp + "\n";
                             }
                             System.out.println("Received: \n" + answer);
-                            byte data[] = new byte[Integer.parseInt(length)];
+                            data = new byte[Integer.parseInt(length)];
                             indata.readFully(data);
                             indata.close();
 
