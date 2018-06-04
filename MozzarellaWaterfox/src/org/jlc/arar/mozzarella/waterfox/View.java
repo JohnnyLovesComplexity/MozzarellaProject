@@ -25,7 +25,7 @@ import javax.swing.JTabbedPane;
 //////////////////////////////////////
 
 //A LANCER AU LIEU DU MAIN DANS LE CLIENT
-public class View extends JFrame implements ActionListener {
+public class View extends JFrame {
     private static final long serialVersionUID = -1374851023131011832L;
 
     private JPanel contentPane;
@@ -104,10 +104,10 @@ public class View extends JFrame implements ActionListener {
 //        label.setBounds(264, 17, 15, 16);
 //        contentPane.add(label);
 
-          btnStart = new JButton("START");
-          btnStart.setBounds(200, 10, 98, 30);
-          btnStart.addActionListener(this);
-          contentPane.add(btnStart);
+//          btnStart = new JButton("START");
+//          btnStart.setBounds(200, 10, 98, 30);
+//          btnStart.addActionListener(this);
+//          contentPane.add(btnStart);
 //
 //        btnPut = new JButton(("PUT"));
 //        btnPut.setBounds(474, 40, 98, 30);
@@ -143,16 +143,24 @@ public class View extends JFrame implements ActionListener {
         lblImage.setBounds(6, 6, 540, 393);
         panelPage.add(lblImage);
 
+        Waterfox client = new Waterfox();
+        while(client.message == "") {}
+        txtPageArea.append(client.message);
+        statusLabel.setText("Reçu");
+
+        if( client.path.contains("jpg")) {
+            lblImage.setIcon(new ImageIcon(client.message.getBytes()));
+        }
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btnStart) {
-            txtPageArea.setText("");
-            txtHeaderArea.setText("");
-            statusLabel.setText("Reception");
-            lblImage.setIcon(null);
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        if(e.getSource() == btnStart) {
+//            txtPageArea.setText("");
+//            txtHeaderArea.setText("");
+//            statusLabel.setText("Reception");
+//            lblImage.setIcon(null);
 
 //            String commande ="GET /";
 //            commande+=txtAdresse.getText();
@@ -160,15 +168,6 @@ public class View extends JFrame implements ActionListener {
 //            commande+=txtFile.getText();
 //            commande+=" HTTP/1.1";
 
-            Waterfox client = new Waterfox();
-            while(client.message == "") {}
-            txtPageArea.append(client.message);
-            statusLabel.setText("Reçu");
 
-            if( client.path.contains("jpg")) {
-                lblImage.setIcon(new ImageIcon("jpg"));
-            }
-        }
 
-    }
 }

@@ -41,10 +41,12 @@ public class Waterfox{
                 String request = "";
                 switch (i) {
                     case 1:
-                        getRequest(printWriter, con_serv, "/Pizza/site/avis-recette.txt ");
+                        path = "/Pizza/site/avis-recette.txt ";
+                        getRequest(printWriter, con_serv, path);
                         break;
                     case 2:
-                        getRequest(printWriter, con_serv, "/Pizza/site/images/head.jpg");
+                        path = "/Pizza/site/images/head.jpg";
+                        getRequest(printWriter, con_serv, path);
                         break;
                     case 3:
                         putRequest(printWriter, con_serv, "MozzarellaWaterfox/file/new.txt");
