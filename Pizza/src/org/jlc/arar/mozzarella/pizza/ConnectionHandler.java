@@ -76,7 +76,7 @@ public class ConnectionHandler implements Runnable {
 		out_data = new PrintStream(so_client.getOutputStream());
 		setOnLog(onLog);
 		
-		tryLog("New connection: " + so_client.getInetAddress().getHostName() + " port " + so_client.getPort());
+		tryLog("New connection: " + getClientName());
 	}
 	public ConnectionHandler(@NotNull Socket so_client) throws IOException {
 		this(so_client, null);
@@ -142,17 +142,21 @@ public class ConnectionHandler implements Runnable {
 					while ((line = in_data.readLine()) != null) {
 						if (line.equals("Connection: close")) {
 							so_client.close();
-							tryLog("Close connection with \"" + so_client.getInetAddress().getCanonicalHostName() + "\"");
+							tryLog("Connection closed with " + getClientName());
 							break;
 						}
 					}
 				} catch (SocketException ignored) {
-					tryLog("Close connection with \"" + so_client.getInetAddress().getCanonicalHostName() + "\"");
+					tryLog("Connection already closed by " + getClientName());
 				}
 			}
 			} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+	}
+	
+	public String getClientName() {
+		return so_client.getInetAddress().getHostAddress() + ":" + so_client.getPort() + " (\"" + so_client.getInetAddress().getCanonicalHostName() + "\")";
 	}
 
 	/* CONNECTION HANDLER METHODS */
