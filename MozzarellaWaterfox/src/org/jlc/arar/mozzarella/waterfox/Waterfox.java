@@ -1,44 +1,25 @@
 package org.jlc.arar.mozzarella.waterfox;
 
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 import org.jlc.arar.mozzarella.FileGenerator;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.Scanner;
-import java.util.SortedMap;
 
 public class Waterfox{
 
-	private BorderPane root;
-
-	private ToolBar tb_bar;
-	private TextField tf_url;
-	private Button bt_go;
-	private Button bt_refresh;
-
-	private WebView w_view;
-	private WebEngine w_engine;
+    static String message;
+    static String path;
 
 
-
-	public static void main(String[] args) {
+    public Waterfox() {
 		System.out.println("Connexion...");
 		try{
 			Socket con_serv = new Socket(InetAddress.getByName("127.0.0.1"),80);
@@ -53,8 +34,7 @@ public class Waterfox{
 				OutputStream op = con_serv.getOutputStream();
 
 
-				//BufferedReader in = new BufferedReader(new InputStreamReader(inp));
-				DataInputStream indata = new DataInputStream(con_serv.getInputStream());
+				BufferedReader in = new BufferedReader(new InputStreamReader(inp));
 				PrintWriter printWriter = new PrintWriter(op);
 
 				Scanner sc = new Scanner(System.in);
@@ -62,74 +42,89 @@ public class Waterfox{
 				printWelcome();
 				System.out.println("Vous souhaitez :\n" +
 						"1 : Acceder au fichier avis-recette.txt\n" +
-						"2 : Acceder à l'image head.jpg\n" +
+						"2 : Acceder à l'image 3-fromages.jpg\n" +
 						"3 : Deposer votre propre fichier");
 				int i = sc.nextInt();
 				String request = "";
-				switch (i) {
-					case 1:
-						getRequest(printWriter, con_serv, "/Pizza/site/avis-recette.txt ");
+				switch (i){
+					case 1 :
+					    path = "/Pizza/site/avis-recette.txt ";
+						getRequest(printWriter,con_serv, path);
 						break;
-					case 2:
-						getRequest(printWriter, con_serv, "/Pizza/site/images/head.jpg");
+					case 2 :
+					    path = "/Pizza/site/3-fromages.jpg ";
+						getRequest(printWriter,con_serv, path);
 						break;
-					case 3:
-						putRequest(printWriter, con_serv, "MozzarellaWaterfox/file/blackhole.jpg");
+					case 3 :
+						putRequest(printWriter);
 						break;
 				}
-				String answer = "";
-				String temp;
-				String length = "";
-				String file;
-				String content;
-				String line = indata.readLine();
-				String stat_line[] = line.split(" ");
+				message = "";
 
-				if (stat_line.length > 1) {
-					if (stat_line[1].equals("200")) {
-						answer = line + "\n";
-						while (!(temp = indata.readLine()).equals("")) {
-
-							if (temp.contains("Length"))
-								if (temp.split(": ").length > 1)
-									length = (temp.split(": "))[1];
-
-							answer += temp + "\n";
-						}
-						System.out.println("Received: \n" + answer);
-						byte data[] = new byte[Integer.parseInt(length)];
-						indata.readFully(data);
-						indata.close();
-
-						String nomFichierSplit = "recu.txt";
-						System.out.println(request);
-						if (request.split("/").length > 2)
-							nomFichierSplit = request.split("/")[2].split(" ")[0];
-						if(i==1)
-							nomFichierSplit = "avis-recette.txt";
-						else if(i==2)
-							nomFichierSplit = "head.jpg";
-						System.out.println(nomFichierSplit);
-
-						FileGenerator.generateFile(new String(data),"MozzarellaWaterfox/receveided/" + nomFichierSplit);
-						System.out.println(new String(data));
-
-						System.out.println("Sucess.");
-						con_serv.close();
-					} else {
-						answer = line + "\n";
-						while (!(temp = indata.readLine()).equals("")) {
-							answer += temp + "\n";
-						}
-						System.out.println("Received: \n" + answer);
+				try {
+					String line = in.readLine();
+					while(line !=null && !line.equals(" ")){
+						message += "\r\n" + line;
+						line = in.readLine();
 					}
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			}catch (IOException e) {
+				System.out.println("Response Recieved!!\n" + message);
+				if(i == 1)
+				{
+					assert message != null;
+					String[] lines = message.split("\r\n");
+					boolean suivante = false;
+					StringBuilder content = new StringBuilder();
+					for (String line:lines) {
+						if(line.toLowerCase().contains("text/html"))
+							suivante = true;
+						else if(suivante){
+							content.append(line);
+						}
+					}
+					FileGenerator.generateFile(content.toString(),"MozzarellaWaterfox/receveided/avis-recette.txt");
+				}
+				else if(i == 2)
+				{
+					assert message != null;
+					String[] lines = message.split("\r\n");
+					StringBuilder result = new StringBuilder();
+					boolean found = false;
+					for (String line: lines) {
+						if(found && !line.equals(""))
+							result.append(line).append("\r\n");
+						if(line.contains("Content-Length"))
+							found = true;
+					}
+							/*int i =0;
+							StringBuilder content = new StringBuilder();
+							while(content.toString().contains("\r\n\r\n")){
+								content.append(message.charAt(i));
+								i++;
+							}
+							String result = message.replace(content.toString(),"");*/
+
+					FileGenerator.generateFile(result.toString(),"MozzarellaWaterfox/receveided/3-fromages.jpg");
+				}
+				printWriter.close();
+				try {
+					con_serv.close();
+					System.out.println("Serveur déconecté");
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("Error");
+				}
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 		}catch(java.net.ConnectException ce){
 			System.out.println("La connexion a échouée.\n");
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -144,28 +139,13 @@ public class Waterfox{
 		System.out.println("--------");
 	}
 
-	private static void putRequest(PrintWriter request, Socket socket, String imgPath){
+	private static void putRequest(PrintWriter request){
 
-		/*System.out.println("Name of the file to send :");
+		System.out.println("Name of the file to send :");
 		Scanner sc2 = new Scanner(System.in);
-		String name = sc2.nextLine();*/
+		String name = sc2.nextLine();
 		try{
-			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-			File file = new File(imgPath);
-			byte[] b = new byte[(int) file.length()];
-			FileInputStream fis = new FileInputStream(file);
-			fis.read(b);
-			fis.close();
-			dos.write(("PUT " + imgPath.replace("MozzarellaWaterfox/file/","") + " HTTP/1.1\r\n").getBytes());
-			dos.write("Content-length: ".getBytes());
-			dos.writeInt((int) file.length());
-			dos.write("\r\n".getBytes());
-			dos.flush();
-			dos.write(b, 0, b.length);
-			//dos.write("\r\n\r\n".getBytes());
-			dos.flush();
-
-			/*String path = "MozzarellaWaterfox/file/"+name;
+			String path = "MozzarellaWaterfox/file/"+name;
 			String contentOfFile = FileGenerator.readContent(path);
 			request.print("PUT /" + name + " HTTP/1.1\r\n");
 			request.print("Accept-Language: en-us\r\n");
@@ -180,10 +160,10 @@ public class Waterfox{
 			request.print("\r\n\r\n");
 			request.flush();
 
-			System.out.println("PUT Data Sent!");*/
+			System.out.println("PUT Data Sent!");
 
 		}catch (IOException ex){
-			System.out.println("File doesn't exist.");
+			System.out.println(name + " doesn't exist.");
 		}
 	}
 
@@ -194,8 +174,8 @@ public class Waterfox{
 			DataOutputStream bw = null;
 			try {
 				bw = new DataOutputStream(sock.getOutputStream());
-				bw.writeBytes("GET "+path+" HTTP/1.1\r\n");
-				bw.writeBytes("Host: www.pizza.com:80\r\n");
+				bw.writeBytes("GET "+path+" HTTP/1.1\r\n\r\n");
+				bw.writeBytes("Host: www.pizza.com:80\r\n\r\n");
 				bw.flush();
 			} catch (IOException e) {
 				e.printStackTrace();

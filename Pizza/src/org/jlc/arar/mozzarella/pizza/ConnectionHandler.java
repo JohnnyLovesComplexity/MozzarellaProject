@@ -71,11 +71,11 @@ public class ConnectionHandler implements Runnable {
 	public ConnectionHandler(@NotNull Socket so_client, @Nullable Function<String, Void> onLog) throws IOException {
 		setClient(so_client);
 
+		tryLog("New connection: " + so_client.getInetAddress().getHostName() + " port " + so_client.getPort());
+
 		in_data = new DataInputStream(so_client.getInputStream());
 		out_data = new PrintStream(so_client.getOutputStream());
 		setOnLog(onLog);
-		
-		tryLog("New connection: " + so_client.getInetAddress().getHostName() + " port " + so_client.getPort());
 	}
 	public ConnectionHandler(@NotNull Socket so_client) throws IOException {
 		this(so_client, null);
@@ -88,10 +88,22 @@ public class ConnectionHandler implements Runnable {
 
 		boolean keepRunning = true;
 		String line = "";
+		boolean put = false;
+		String puturl = "";
+		boolean readText = false;
+		File g = null;
+		PrintWriter pw = null;
+		StringBuilder text = new StringBuilder();
 		try {
-			line = in_data.readLine();
-			if(line != null){
+			while (keepRunning && (line = in_data.readLine()) != null) {
+                System.out.println("line==="+line);
 				String[] parts = line.split(" ");
+				if (parts.length < 2 && parts.length != 0) {
+				    continue;
+                }
+					//throw new IllegalArgumentException("Cannot read properly the request sent by the client: " + Arrays.toString(parts));
+
+				// In the case the client wants a file
 				if (parts[0].equals("GET")) {
 					// Get the file wanted by the client
 					String url = parts[1];
@@ -107,39 +119,47 @@ public class ConnectionHandler implements Runnable {
 						sendError(Code.NOT_FOUND, f.toString());
 					else {
 						send(f);
-						so_client.close();
+						//so_client.close();
 						tryLog("\"" + url + "\" sent!");
 						keepRunning = false;
 					}
 				}
 				else if (parts[0].equals("PUT")) {
+					put = true;
+					// The file added by the client
 					String url = parts[1];
-
 					tryLog("The clients wants to add \"" + url + "\"");
+					puturl = url;
+					g = new File("Pizza/site/" + url);
+					pw = new PrintWriter (new BufferedWriter (new FileWriter (g)));
 
-					File file = new File("Pizza/site/"+url);
-					FileOutputStream fos = new FileOutputStream(file);
-					line = in_data.readLine();
-					int length = Integer.parseInt(line.replace("Content-length: ","").replace("\r\n",""));
-					byte[] b = new byte[length];
-					in_data.readFully(b);
-					String received = new String(b);
-					String content = "";
-					boolean found = false;
-					int i = 0;
-					while(i<received.length()) {
-						if(found)
-							fos.write(received.charAt(i));
-						if(content.contains("Content-length"))
-							found = true;
-						i++;
+					/*sendError(Code.INTERNAL_SERVER_ERROR);
+					out_data.close();
+					throw new NotImplementedException();*/
+				}else if(put){
+					pw.append(line);
+					text.append(line)
+						.append("\r\n");
+					System.out.println("::::::::::::::::::" + text);
+					if(text.toString().contains("\r\n\r\n")){
+						break;
 					}
-					sendError(Code.CREATED);
-					//fos.write(b, 0 , b.length);
 				}
 			}
-			} catch (IOException e1) {
-			e1.printStackTrace();
+            System.out.println("il est sortii!!!!!");
+			if(put){
+				pw.close();
+				tryLog(text.toString());
+				FileGenerator.generateFile(text.toString(),puturl);
+				tryLog("File created \"" + puturl + "\"");
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		try {
+			so_client.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -194,25 +214,66 @@ public class ConnectionHandler implements Runnable {
 		}
 	}
 
+	// Construct Response Header
+	private static String constructResponseHeader(int responseCode, int dem) {
+		StringBuilder stringBuilder = new StringBuilder();
+
+		if (responseCode == 200) {
+			if(dem == 1){
+				stringBuilder.append("HTTP/1.1 200 OK\r\n");
+				stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
+				stringBuilder.append("Server:wwww.pizza.com\r\n");
+				stringBuilder.append("Content-Type: text/html\r\n");
+				stringBuilder.append("\r\n\r\n");
+			} else {
+				stringBuilder.append("HTTP/1.1 200 OK\r\n");
+				stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
+				stringBuilder.append("Server:wwww.pizza.com\r\n");
+				stringBuilder.append("Accept-Ranges: bytes\r\n");
+				stringBuilder.append("Content-Type: image/jpg\r\n");
+				stringBuilder.append("\r\n\r\n");
+			}
+		} else if (responseCode == 404) {
+			stringBuilder.append("HTTP/1.1 404 Not Found\r\n");
+			stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
+			stringBuilder.append("Server:wwww.pizza.com\r\n");
+			stringBuilder.append("\r\n\r\n");
+		} else if (responseCode == 304) {
+			stringBuilder.append("HTTP/1.1 304 Not Modified\r\n");
+			stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
+			stringBuilder.append("Server:wwww.pizza.com\r\n");
+			stringBuilder.append("\r\n\r\n");
+		}else if(responseCode == 201){
+			stringBuilder.append("HTTP/1.1 201 Created\r\n");
+			stringBuilder.append("Date:" + getCurrentTime() + "\r\n");
+			stringBuilder.append("Server:wwww.pizza.com\r\n");
+			stringBuilder.append("Content-Location: /new.html\n\r\n");
+			stringBuilder.append("\r\n\r\n");
+		}
+		return stringBuilder.toString();
+	}
+	private static String getCurrentTime() {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
+		String formattedDate = sdf.format(date);
+		return formattedDate;
+	}
+
+
 	public void sendError(@NotNull Code code, @Nullable String filename) {
 		if (code == null)
 			throw new NullPointerException();
-		
-		String log = "Error " + code.getCode() + (filename != null ? ": \"" + filename + "\"" : "") + ".";
+
+		tryLog("Error " + code.getCode() + (filename != null ? ": " + filename : ""));
 
 		if (out_data != null) {
-			out_data.print(code.getMessage());
+			out_data.print(code.getCode());
 			out_data.print("Server: Pizza Web Server");
-			out_data.print("Content-Type: text/html\r\n");
-			out_data.print("Content-Length: 0\r\n");
-			out_data.print("\r\n");
-			out_data.print("\r\n");
+			out_data.print("Content-Type: " + MimeTypeManager.parse(filename) + "\r\n");
+			out_data.print("");
+			out_data.println();
 			out_data.flush();
-			out_data.close();
-			
-			log += " Error sent.";
 		}
-		tryLog(log);
 	}
 	public void sendError(@NotNull Code code) {
 		sendError(code, null);
