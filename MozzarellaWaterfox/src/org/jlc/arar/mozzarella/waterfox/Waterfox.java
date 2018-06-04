@@ -32,72 +32,76 @@ public class Waterfox{
 
                 Scanner sc = new Scanner(System.in);
 
+                boolean quitter = false;
                 printWelcome();
                 System.out.println("Vous souhaitez :\n" +
                         "1 : Acceder au fichier avis-recette.txt\n" +
                         "2 : Acceder à l'image head.jpg\n" +
-                        "3 : Deposer votre propre fichier");
+                        "3 : Quitter l'échange\n");
                 int i = sc.nextInt();
                 String request = "";
+                String im = "";
+                String fic = "";
                 switch (i) {
                     case 1:
-                        path = "/Pizza/site/avis-recette.txt ";
+                        fic = "avis-recette.txt";
+                        path = "/Pizza/site/" + fic;
                         getRequest(printWriter, con_serv, path);
                         break;
                     case 2:
-                        path = "/Pizza/site/images/head.jpg";
+                        im = "rose.jpg";
+                        path = "/Pizza/site/images/"+im;
                         getRequest(printWriter, con_serv, path);
                         break;
                     case 3:
-                        putRequest(printWriter, con_serv, "MozzarellaWaterfox/file/new.txt");
+                        quitter = true;
+                        con_serv.close();
                         break;
                 }
-                String answer = "";
-                String temp;
-                String length = "";
-                String file;
-                String content;
-                String line = indata.readLine();
-                if(line != null){
-                    String stat_line[] = line.split(" ");
+                if(!quitter){
+                    String answer = "";
+                    String temp;
+                    String length = "";
+                    String file;
+                    String content;
+                    String line = indata.readLine();
+                    if(line != null){
+                        String stat_line[] = line.split(" ");
 
-                    if (stat_line.length > 1) {
-                        if (stat_line[1].equals("200")) {
-                            answer = line + "\n";
-                            while (!(temp = indata.readLine()).equals("")) {
+                        if (stat_line.length > 1) {
+                            if (stat_line[1].equals("200")) {
+                                answer = line + "\n";
+                                while (!(temp = indata.readLine()).equals("")) {
 
-                                if (temp.contains("Length"))
-                                    if (temp.split(": ").length > 1)
-                                        length = (temp.split(": "))[1];
+                                    if (temp.contains("Length"))
+                                        if (temp.split(": ").length > 1)
+                                            length = (temp.split(": "))[1];
 
-                                answer += temp + "\n";
+                                    answer += temp + "\n";
+                                }
+                                System.out.println("Received: \n" + answer);
+                                data = new byte[Integer.parseInt(length)];
+                                indata.readFully(data);
+                                indata.close();
+
+                                String nomFichierSplit = "recu.txt";
+                                System.out.println(request);
+                                if (request.split("/").length > 2)
+                                    nomFichierSplit = request.split("/")[2].split(" ")[0];
+                                if(i==1)
+                                    nomFichierSplit = fic;
+                                else if(i==2)
+                                    nomFichierSplit = im;
+                                FileGenerator.generateFile(new String(data),"MozzarellaWaterfox/receveided/" + nomFichierSplit);
+
+                                System.out.println("Sucess.");
+                            } else {
+                                answer = line + "\n";
+                                while (!(temp = indata.readLine()).equals("")) {
+                                    answer += temp + "\n";
+                                }
+                                System.out.println("Received: \n" + answer);
                             }
-                            System.out.println("Received: \n" + answer);
-                            data = new byte[Integer.parseInt(length)];
-                            indata.readFully(data);
-                            indata.close();
-
-                            String nomFichierSplit = "recu.txt";
-                            System.out.println(request);
-                            if (request.split("/").length > 2)
-                                nomFichierSplit = request.split("/")[2].split(" ")[0];
-                            if(i==1)
-                                nomFichierSplit = "avis-recette.txt";
-                            else if(i==2)
-                                nomFichierSplit = "head.jpg";
-                            System.out.println(nomFichierSplit);
-
-                            FileGenerator.generateFile(new String(data),"MozzarellaWaterfox/receveided/" + nomFichierSplit);
-                            System.out.println(new String(data));
-
-                            System.out.println("Sucess.");
-                            con_serv.close();
-                        } else {
-                            answer = line + "\n";
-                            while (!(temp = indata.readLine()).equals("")) {
-                                answer += temp + "\n";
-                            }
-                            System.out.println("Received: \n" + answer);
                         }
                     }
                 }

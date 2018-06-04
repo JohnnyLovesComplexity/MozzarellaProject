@@ -23,9 +23,3 @@ body{
 	border: 10px solid #FFE4E1;
 	border-radius: 10px;
 }
-
-#bgimg{
-    height: 500px;
-    background: url(images/head.png) no-repeat center fixed;
-    background-size: cover;
-}

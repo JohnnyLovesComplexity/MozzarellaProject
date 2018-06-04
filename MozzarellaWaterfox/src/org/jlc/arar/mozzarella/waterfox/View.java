@@ -144,13 +144,15 @@ public class View extends JFrame {
         panelPage.add(lblImage);
 
         Waterfox client = new Waterfox();
-        String data = new String(client.data, StandardCharsets.UTF_8);
-        while(data.equals("")) {}
-        txtPageArea.append(data);
-        statusLabel.setText("Reçu");
+        if (client.data != null) {
+            String data = new String(client.data, StandardCharsets.UTF_8);
+            while(data.equals("")) {}
+            txtPageArea.append(data);
+            statusLabel.setText("Reçu");
 
-        if( client.path.contains("jpg")) {
-            lblImage.setIcon(new ImageIcon(client.data));
+            if( client.path.contains("jpg")) {
+                lblImage.setIcon(new ImageIcon(client.data));
+            }
         }
 
     }
