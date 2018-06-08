@@ -10,11 +10,15 @@ public class Waterfox{
     static byte data [];
     static String path;
 
+    private String adress = "127.0.0.1";
+    private String im = "rose.jpg";
+    private String fic = "avis-recette.txt";
+
 
     public Waterfox() {
         System.out.println("Connexion...");
         try{
-            Socket con_serv = new Socket(InetAddress.getByName("127.0.0.1"),80);
+            Socket con_serv = new Socket(InetAddress.getByName(adress),80);
             try {
 
                 System.out.println("Connected");
@@ -34,22 +38,24 @@ public class Waterfox{
 
                 boolean quitter = false;
                 printWelcome();
+
                 System.out.println("Vous souhaitez :\n" +
-                        "1 : Acceder au fichier avis-recette.txt\n" +
-                        "2 : Acceder à l'image head.jpg\n" +
+                        "1 : Acceder a un fichier du serveur\n" +
+                        "2 : Acceder à une image du serveur\n" +
                         "3 : Quitter l'échange\n");
                 int i = sc.nextInt();
                 String request = "";
-                String im = "";
-                String fic = "";
+                System.out.println("Saisissez le fichier que vous voulez recevoir.");
+                String name = sc.next();
+
                 switch (i) {
                     case 1:
-                        fic = "avis-recette.txt";
+                        fic = name;
                         path = "/Pizza/site/" + fic;
                         getRequest(printWriter, con_serv, path);
                         break;
                     case 2:
-                        im = "rose.jpg";
+                        im = name;
                         path = "/Pizza/site/images/"+im;
                         getRequest(printWriter, con_serv, path);
                         break;
