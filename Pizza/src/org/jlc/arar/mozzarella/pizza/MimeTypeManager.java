@@ -4,12 +4,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class MimeTypeManager {
 
 	@Nullable
 	public static String parse(@NotNull String filename) {
-		String parts[] = filename.split(".");
+		String[] parts = filename.split(Pattern.quote("."));
 		StringBuilder suffix = new StringBuilder();
 		
 		if (parts.length <= 0)
@@ -19,7 +21,7 @@ public class MimeTypeManager {
 		else
 			for (int i = 1; i < parts.length; i++)
 				suffix.append(parts[i]);
-		
+
 		switch (suffix.toString())
 		{
 			case "txt":
