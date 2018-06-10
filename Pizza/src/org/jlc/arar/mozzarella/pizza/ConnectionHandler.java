@@ -159,10 +159,10 @@ public class ConnectionHandler implements Runnable {
 		if (data == null)
 			return false;
 
-		out_data.print(Code.OK.getMessage());
+		out_data.print(Code.OK.getMessage()+"\r\n");
 		out_data.print("");
 
-		out_data.print("Server: Pizza Web Server");
+		out_data.print("Server: Pizza Web Server\r\n");
         out_data.print("Content-Type: " + MimeTypeManager.parse(f.getName()) + "\r\n");
         out_data.print("Content-Length: " + data.length + "\r\n");
         out_data.print("\r\n");
@@ -198,8 +198,8 @@ public class ConnectionHandler implements Runnable {
 				data = message.getBytes();
 			}
 			
-			out_data.print(code.getMessage());
-			out_data.print("Server: Pizza Web Server");
+			out_data.print(code.getMessage()+"\r\n");
+			out_data.print("Server: Pizza Web Server\r\n");
 			out_data.print("Content-Type: text/html\r\n");
 			out_data.print("Content-Length: " + data.length + "\r\n");
 			out_data.print("\r\n");
@@ -217,8 +217,8 @@ public class ConnectionHandler implements Runnable {
 
 	public void sendCode(@NotNull Code code){
 		if(out_data != null){
-			out_data.print(code.getMessage());
-			out_data.print("Server: Pizza Web Server");
+			out_data.print(code.getMessage()+"\r\n");
+			out_data.print("Server: Pizza Web Server\r\n");
 			out_data.print("\r\n\r\n");
 			out_data.flush();
 			tryLog("Answer send ! 201 created");
