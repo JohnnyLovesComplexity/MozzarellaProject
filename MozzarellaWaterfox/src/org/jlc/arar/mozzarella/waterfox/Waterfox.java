@@ -9,6 +9,7 @@ public class Waterfox{
 
     static byte data [];
     static String path;
+    static boolean quitter = false;
 
     private String adress = "127.0.0.1";
     private String im = "rose.jpg";
@@ -36,16 +37,16 @@ public class Waterfox{
 
                 Scanner sc = new Scanner(System.in);
 
-                boolean quitter = false;
                 printWelcome();
 
                 System.out.println("Vous souhaitez :\n" +
                         "1 : Acceder a un fichier du serveur\n" +
                         "2 : Acceder à une image du serveur\n" +
-                        "3 : Quitter l'échange\n");
+                        "3 : Envoyer un fichier au serveur\n" +
+                        "4 : Quitter l'échange\n");
                 int i = sc.nextInt();
                 String request = "";
-                System.out.println("Saisissez le fichier que vous voulez recevoir.");
+                System.out.println("Saisissez le fichier que vous voulez recevoir/envoyer.");
                 String name = sc.next();
 
                 switch (i) {
@@ -59,7 +60,11 @@ public class Waterfox{
                         path = "/Pizza/site/images/"+im;
                         getRequest(printWriter, con_serv, path);
                         break;
-                    case 3:
+                    case 3 :
+                        fic = name;
+                        putRequest(printWriter,con_serv,"MozzarellaWaterfox/file/"+fic);
+                        break;
+                    case 4:
                         quitter = true;
                         con_serv.close();
                         break;
@@ -223,8 +228,7 @@ public class Waterfox{
 
             byte[] data = baos.toByteArray();
 
-            out_data.print("PUT " + f.toString() + " HTTP/1.1\r\n");
-            out_data.print("Server: Pizza Web Server");
+            out_data.print("PUT "  + f.getName() + " HTTP/1.1\r\n");
             out_data.print("Content-Length: " + data.length + "\r\n");
             out_data.print("\r\n");
             out_data.write(data, 0, data.length);

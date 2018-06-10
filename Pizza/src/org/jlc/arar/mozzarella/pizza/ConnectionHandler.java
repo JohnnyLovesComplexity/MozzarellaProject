@@ -25,7 +25,7 @@ public class ConnectionHandler implements Runnable {
 	public enum Code {
 		CONTINUE(100, "HTTP/1.0 100 Continue"),
 		OK(200, "HTTP/1.0 200 OK"),
-		CREATED(200, "HTTP/1.0 200 Created"),
+		CREATED(201, "HTTP/1.0 200 Created"),
 		NOT_MODIFIED(304, "HTTP/1.0 304 Not Modified"),
 		BAD_REQUEST(400, "HTTP/1.0 400 Bad Request"),
 		FORBIDDEN(403, "HTTP/1.0 400 Forbidden"),
@@ -120,22 +120,14 @@ public class ConnectionHandler implements Runnable {
 					File file = new File("Pizza/site/"+url);
 					FileOutputStream fos = new FileOutputStream(file);
 					line = in_data.readLine();
-					int length = Integer.parseInt(line.replace("Content-length: ","").replace("\r\n",""));
+					int length = Integer.parseInt(line.toLowerCase().replace("content-length: ","")
+							.replace("\r\n",""));
 					byte[] b = new byte[length];
 					in_data.readFully(b);
 					String received = new String(b);
-					String content = "";
-					boolean found = false;
-					int i = 0;
-					while(i<received.length()) {
-						if(found)
-							fos.write(received.charAt(i));
-						if(content.contains("Content-length"))
-							found = true;
-						i++;
-					}
-					sendError(Code.CREATED);
-					//fos.write(b, 0 , b.length);
+					fos.write(b, 0 , b.length);
+					send(file);
+					sendCode(Code.CREATED);
 				}
 				
 				try {
@@ -171,7 +163,7 @@ public class ConnectionHandler implements Runnable {
 		out_data.print("");
 
 		out_data.print("Server: Pizza Web Server");
-        out_data.print("Content-Type: " + MimeTypeManager.parse(f) + "\r\n");
+        out_data.print("Content-Type: " + MimeTypeManager.parse(f.getName()) + "\r\n");
         out_data.print("Content-Length: " + data.length + "\r\n");
         out_data.print("\r\n");
         out_data.write(data, 0, data.length);
@@ -223,6 +215,17 @@ public class ConnectionHandler implements Runnable {
 	}
 	public void sendError(@NotNull Code code) {
 		sendError(code, null);
+	}
+
+	public void sendCode(@NotNull Code code){
+		if(out_data != null){
+			out_data.print(code.getMessage());
+			out_data.print("Server: Pizza Web Server");
+			out_data.print("\r\n\r\n");
+			out_data.flush();
+			out_data.close();
+			tryLog("Answer send ! 201 created");
+		}
 	}
 	
 	@Nullable
