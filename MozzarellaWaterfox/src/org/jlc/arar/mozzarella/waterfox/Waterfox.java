@@ -70,7 +70,7 @@ public class Waterfox{
                         break;
                 }
                 if(!quitter){
-                    String answer = "";
+                    StringBuilder answer = new StringBuilder();
                     String temp;
                     String length = "";
                     String file;
@@ -81,19 +81,18 @@ public class Waterfox{
 
                         if (stat_line.length > 1) {
                             if (stat_line[1].equals("200")) {
-                                answer = line + "\n";
+                                answer = new StringBuilder(line + "\n");
                                 while (!(temp = indata.readLine()).equals("")) {
 
                                     if (temp.contains("Length"))
                                         if (temp.split(": ").length > 1)
                                             length = (temp.split(": "))[1];
 
-                                    answer += temp + "\n";
+                                    answer.append(temp).append("\n");
                                 }
                                 System.out.println("Received: \n" + answer);
                                 data = new byte[Integer.parseInt(length)];
                                 indata.readFully(data);
-                                indata.close();
 
                                 String nomFichierSplit = "recu.txt";
                                 System.out.println(request);
@@ -106,10 +105,18 @@ public class Waterfox{
                                 FileGenerator.generateFile(new String(data),"MozzarellaWaterfox/receveided/" + nomFichierSplit);
 
                                 System.out.println("Sucess.");
-                            } else {
-                                answer = line + "\n";
+                            }else if(stat_line[1].equals("201")) {
+                                answer = new StringBuilder(line + "\n");
                                 while (!(temp = indata.readLine()).equals("")) {
-                                    answer += temp + "\n";
+                                    answer.append(temp).append("\n");
+                                }
+                                System.out.println("Received: \n" + answer);
+
+                                System.out.println("Sucess.");
+                            }else {
+                                answer = new StringBuilder(line + "\n");
+                                while (!(temp = indata.readLine()).equals("")) {
+                                    answer.append(temp).append("\n");
                                 }
                                 System.out.println("Received: \n" + answer);
                             }
@@ -236,7 +243,6 @@ public class Waterfox{
 
 
             out_data.flush();
-            out_data.close();
 
             return true;
         } catch (IOException ex) {

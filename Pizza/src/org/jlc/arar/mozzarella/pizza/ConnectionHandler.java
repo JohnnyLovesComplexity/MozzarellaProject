@@ -25,7 +25,7 @@ public class ConnectionHandler implements Runnable {
 	public enum Code {
 		CONTINUE(100, "HTTP/1.0 100 Continue"),
 		OK(200, "HTTP/1.0 200 OK"),
-		CREATED(201, "HTTP/1.0 200 Created"),
+		CREATED(201, "HTTP/1.0 201 Created"),
 		NOT_MODIFIED(304, "HTTP/1.0 304 Not Modified"),
 		BAD_REQUEST(400, "HTTP/1.0 400 Bad Request"),
 		FORBIDDEN(403, "HTTP/1.0 400 Forbidden"),
@@ -126,8 +126,8 @@ public class ConnectionHandler implements Runnable {
 					in_data.readFully(b);
 					String received = new String(b);
 					fos.write(b, 0 , b.length);
-					send(file);
 					sendCode(Code.CREATED);
+					in_data.close();
 				}
 				
 				try {
@@ -139,7 +139,7 @@ public class ConnectionHandler implements Runnable {
 						}
 					}
 				} catch (SocketException ignored) {
-					tryLog("Connection already closed by " + getClientName());
+					tryLog("Connection closed by " + getClientName());
 				}
 			}
 			} catch (IOException e1) {
@@ -171,7 +171,6 @@ public class ConnectionHandler implements Runnable {
 
 
 		out_data.flush();
-		out_data.close();
 
 		return true;
 	}
@@ -207,8 +206,7 @@ public class ConnectionHandler implements Runnable {
 			out_data.write(data, 0, data.length);
 			out_data.print("\r\n");
 			out_data.flush();
-			out_data.close();
-			
+
 			log += " Error sent.";
 		}
 		tryLog(log);
@@ -223,7 +221,6 @@ public class ConnectionHandler implements Runnable {
 			out_data.print("Server: Pizza Web Server");
 			out_data.print("\r\n\r\n");
 			out_data.flush();
-			out_data.close();
 			tryLog("Answer send ! 201 created");
 		}
 	}
